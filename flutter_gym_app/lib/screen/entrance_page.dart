@@ -44,7 +44,7 @@ class _EntrancePageState extends State<EntrancePage> {
         title: Text(
             Constants.MESSAGES.message(type: MESSAGE_TYPE.ENTRANCE_CARD)),
       ),
-      drawer: CustomDrawer().mainDrawer(context),
+      drawer: CustomDrawer().coloredDrawer(context),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -55,7 +55,7 @@ class _EntrancePageState extends State<EntrancePage> {
                 child: Column(
                   children: [
                     Container(
-                      width: 300,
+                        width: 300,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.0),
                             color: Colors.white
