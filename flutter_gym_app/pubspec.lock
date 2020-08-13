@@ -76,6 +76,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_keyboard_visibility:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.1"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -93,6 +100,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_typeahead:
+    dependency: "direct main"
+    description:
+      name: flutter_typeahead
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.8.7"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -183,7 +197,7 @@ packages:
     source: hosted
     version: "3.0.13"
   qr:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: qr
       url: "https://pub.dartlang.org"
@@ -196,6 +210,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.0"
+  qrscan:
+    dependency: "direct main"
+    description:
+      name: qrscan
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.17"
   rflutter_alert:
     dependency: "direct main"
     description:

@@ -18,6 +18,8 @@ class EnglishMessages implements Messages {
         return 'Welcome to ';
       case MESSAGE_TYPE.SCAN_HERE:
         return 'Scan here';
+      case MESSAGE_TYPE.SCAN:
+        return 'Scan';
       case MESSAGE_TYPE.LETS_START:
         return 'Let\'s start';
       case MESSAGE_TYPE.DETAILS:
@@ -30,7 +32,13 @@ class EnglishMessages implements Messages {
         return 'Error';
       case MESSAGE_TYPE.ERROR_LOGIN:
         return 'Please check your email and/or your password';
-      default:
+      case MESSAGE_TYPE.ENTRANCE_CARD:
+        return 'Entrance card';
+      case MESSAGE_TYPE.REMAINING_DAYS:
+        return 'Remaining days: ';
+      case MESSAGE_TYPE.INSERT_UID:
+        return 'Enter user ID';
+    default:
         return '';
     }
   }

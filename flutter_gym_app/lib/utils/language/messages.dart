@@ -11,7 +11,11 @@ enum MESSAGE_TYPE {
   DONE,
   OK,
   ERROR_LOGIN,
-  ERROR
+  ERROR,
+  ENTRANCE_CARD,
+  REMAINING_DAYS,
+  SCAN,
+  INSERT_UID
 }
 
 abstract class Messages {

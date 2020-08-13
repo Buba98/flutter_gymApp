@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gym_app/screen/entrance_page.dart';
+import 'package:flutter_gym_app/utils/language/messages.dart';
 import '../constants.dart';
+import '../custom_material_color.dart';
 import 'custom_alert.dart';
 
 class CustomGridTile {
@@ -62,34 +65,45 @@ class CustomGridTile {
                     height: 150,
                     width: 200,
                     decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+//                        boxShadow: [BoxShadow(
+//                            color: const Color(0x80000000),
+////                            offset: Offset(10, 10),
+//                            blurRadius: 15,
+//                            spreadRadius: -1
+//                        ),
+//                        ]
+                    ),
+                    child: SizedBox(
+                      height: 150,
+                      width: 200,
+                      child: IconButton(
+                        iconSize: 100,
+                        padding: new EdgeInsets.all(0.0),
                         color: Colors.white,
-                        image: DecorationImage(
-                          image: AssetImage(Constants.GYM_LOGO),
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        boxShadow: [BoxShadow(
-                            color: const Color(0x80000000),
-                            offset: Offset(10, 10),
-                            blurRadius: 15,
-                            spreadRadius: -1
-                        ),
-                        ]
+                        icon: Icon(Icons.card_membership),
+                        onPressed: null,
+                      ),
                     ),
                   ),
+
                   SizedBox(height: 13,),
                   Center(
                     child: Text(
-                      Constants.GYM_NAME, style: TextStyle(color: Colors.white,
-                        fontSize: 18,
-                        fontFamily: 'Rowdies'),),
+                      Constants.MESSAGES.message(
+                          type: MESSAGE_TYPE.ENTRANCE_CARD),
+                      style: TextStyle(color: Colors.white,
+                          fontSize: 18,
+                          fontFamily: 'Rowdies'),),
                   )
                 ],
               )
           ),
-          onTap: () {
-            CustomAlert().entranceQr(context: context).show();
-          },
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EntrancePage())),
+//          onTap: () {
+//            CustomAlert().entranceQr(context: context).show();
+//          },
         )
     );
   }

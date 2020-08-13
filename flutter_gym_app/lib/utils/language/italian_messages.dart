@@ -18,6 +18,8 @@ class ItalianMessages implements Messages {
         return 'Benvenuto in ';
       case MESSAGE_TYPE.SCAN_HERE:
         return 'Scannerizza qui';
+      case MESSAGE_TYPE.SCAN:
+        return 'Scannerizza';
       case MESSAGE_TYPE.LETS_START:
         return 'Iniziamo';
       case MESSAGE_TYPE.DETAILS:
@@ -30,6 +32,12 @@ class ItalianMessages implements Messages {
         return 'Errore';
       case MESSAGE_TYPE.ERROR_LOGIN:
         return 'Per favore ricontrolla email e/o password';
+      case MESSAGE_TYPE.ENTRANCE_CARD:
+        return 'Tessara di ingresso';
+      case MESSAGE_TYPE.REMAINING_DAYS:
+        return 'Giorni rimanenti: ';
+      case MESSAGE_TYPE.INSERT_UID:
+        return 'Inserisci ID utente';
       default:
         return '';
     }

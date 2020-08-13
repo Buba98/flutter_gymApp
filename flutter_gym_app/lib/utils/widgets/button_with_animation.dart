@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gym_app/utils/custom_material_color.dart';
 import 'package:flutter_gym_app/utils/language/messages.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -37,7 +38,7 @@ class ButtonWithAnimationState extends State<ButtonWithAnimation> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
-          color: Colors.blue[900],
+          color: CustomColor().foreground(),
           child: IndexedStack(index: index, children: <Widget>[
             Center(
               child: Text(

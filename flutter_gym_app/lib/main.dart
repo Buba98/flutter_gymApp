@@ -18,39 +18,34 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp>{
 
-  bool isLogged = false;
+//  Widget _widget = LoginPage();
+  Widget _widget = HomePage();
 
   @override
   Widget build(BuildContext context) {
     initialCheck();
 
-    if (isLogged) {
-      return MaterialApp(
-        title: Constants.GYM_NAME,
-        theme: ThemeData(
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: HomePage(),
-      );
-    } else {
-      return MaterialApp(
-        title: Constants.MESSAGES.message(type: MESSAGE_TYPE.LOGIN),
-        theme: ThemeData(
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home:  LoginPage(),
-      );
-    }
+    return MaterialApp(
+      title: Constants.GYM_NAME,
+      theme: ThemeData(
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: _widget,
+    );
   }
 
   void initialCheck() async {
+
     Constants.PREFERENCES = await SharedPreferences.getInstance();
-
     String locale = await Devicelocale.currentLocale;
+    bool isLogged = Constants.PREFERENCES.get(Constants.LOG_STATUS) == true &&
+        Constants.PREFERENCES.get(Constants.USER_OR_OWNER) != null;
+    Constants.setLanguage(language: locale);
 
-    setState(() {
-      isLogged = Constants.PREFERENCES.get(Constants.LOG_STATUS) == true && Constants.PREFERENCES.get(Constants.USER_OR_OWNER) != null;
-      Constants.setLanguage(language: locale);
-    });
+    if (isLogged) {
+      setState(() {
+        _widget = HomePage();
+      });
+    }
   }
 }
