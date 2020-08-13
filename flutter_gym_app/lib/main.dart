@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gym_app/screen/home_page.dart';
+import 'package:flutter_gym_app/screen/login_page.dart';
 import 'package:flutter_gym_app/utils/constants.dart';
 import 'package:flutter_gym_app/utils/custom_material_color.dart';
 import 'package:flutter_gym_app/utils/language/messages.dart';
@@ -12,25 +13,24 @@ void main() {
 class MyApp extends StatelessWidget {
 
   bool isLogged;
-  bool normalUser;
 
   void initialCheck() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    debugPrint(preferences.get(Constants.LOG_STATUS));
+    Constants.PREFERENCES = await SharedPreferences.getInstance();
 
-    isLogged = preferences.get(Constants.LOG_STATUS) == true;
+    isLogged = Constants.PREFERENCES.get(Constants.LOG_STATUS) == true;
 
-    if (preferences.get(Constants.USER_OR_OWNER) == null) {
+    if (Constants.PREFERENCES.get(Constants.USER_OR_OWNER) == null) {
       isLogged = false;
-    } else {
-      normalUser = preferences.get(Constants.USER_OR_OWNER);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+
     initialCheck();
+
+    Constants.LANGUAGE = Localizations.localeOf(context).languageCode;
 
     if (isLogged) {
       return MaterialApp(

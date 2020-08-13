@@ -14,6 +14,22 @@ class ItalianMessages implements Messages {
         return 'Password dimenticata?';
       case MESSAGE_TYPE.ACCESS:
         return 'Accedi';
+      case MESSAGE_TYPE.WELCOME:
+        return 'Benvenuto in ';
+      case MESSAGE_TYPE.SCAN_HERE:
+        return 'Scannerizza qui';
+      case MESSAGE_TYPE.LETS_START:
+        return 'Iniziamo';
+      case MESSAGE_TYPE.DETAILS:
+        return 'Dettagli';
+      case MESSAGE_TYPE.DONE:
+        return 'Fatto';
+      case MESSAGE_TYPE.OK:
+        return 'Ok';
+      case MESSAGE_TYPE.ERROR:
+        return 'Errore';
+      case MESSAGE_TYPE.ERROR_LOGIN:
+        return 'Per favore ricontrolla email e/o password';
       default:
         return '';
     }

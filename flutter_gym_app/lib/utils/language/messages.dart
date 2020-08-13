@@ -3,7 +3,15 @@ enum MESSAGE_TYPE {
   EMAIL,
   PASSWORD,
   FORGOTTEN_PASSWORD,
-  ACCESS
+  ACCESS,
+  WELCOME,
+  SCAN_HERE,
+  LETS_START,
+  DETAILS,
+  DONE,
+  OK,
+  ERROR_LOGIN,
+  ERROR
 }
 
 abstract class Messages {

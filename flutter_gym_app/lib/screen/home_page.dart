@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gym_app/utils/custom_material_color.dart';
+import 'package:flutter_gym_app/utils/widgets/custom_grid_tile.dart';
 
 class HomePage extends StatefulWidget{
   HomePage();
@@ -13,14 +15,9 @@ class _HomePageState extends State<HomePage> {
   _HomePageState();
 
   @override
-  void initState() async {
-    if ()
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(18, 5, 16, 1),
+      backgroundColor: CustomColor().background(),
       body: Padding(
         padding: EdgeInsets.only(top: 20),
         child: GridView(
@@ -29,7 +26,8 @@ class _HomePageState extends State<HomePage> {
             childAspectRatio: 0.9,
           ),
           children: <GridTile>[
-            IconCustom().tileFunctionSelection(title: 'Tessera di ingresso', image: '', context: context,  )
+            CustomGridTile().tileEntrance(context: context),
+//            CustomGridTile().tileFunctionSelection(title: ),
           ],
         ),
       ),

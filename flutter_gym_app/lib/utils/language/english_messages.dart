@@ -12,6 +12,24 @@ class EnglishMessages implements Messages {
         return 'Password';
       case MESSAGE_TYPE.FORGOTTEN_PASSWORD:
         return 'Forgotten password?';
+      case MESSAGE_TYPE.ACCESS:
+        return 'Access';
+      case MESSAGE_TYPE.WELCOME:
+        return 'Welcome to ';
+      case MESSAGE_TYPE.SCAN_HERE:
+        return 'Scan here';
+      case MESSAGE_TYPE.LETS_START:
+        return 'Let\'s start';
+      case MESSAGE_TYPE.DETAILS:
+        return 'Details';
+      case MESSAGE_TYPE.DONE:
+        return 'Done';
+      case MESSAGE_TYPE.OK:
+        return 'Ok';
+      case MESSAGE_TYPE.ERROR:
+        return 'Error';
+      case MESSAGE_TYPE.ERROR_LOGIN:
+        return 'Please check your email and/or your password';
       default:
         return '';
     }
