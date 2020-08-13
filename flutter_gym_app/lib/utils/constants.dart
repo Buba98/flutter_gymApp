@@ -5,8 +5,8 @@ import 'language/messages.dart';
 
 class Constants {
   static SharedPreferences PREFERENCES;
-  static String LANGUAGE; //todo get language from the system
-  static Messages MESSAGES = _MESSAGES[LANGUAGE];
+  static String _LANGUAGE = 'it_IT'; //todo get language from the system
+  static Messages MESSAGES = _MESSAGES[_LANGUAGE];
   static const String LOG_STATUS = 'loginStatus';
   static const String UID = 'userId';
   static const String USER_OR_OWNER = 'role';
@@ -14,8 +14,17 @@ class Constants {
   static const String GYM_LOGO = 'assets/gymLogo.png'; //todo here your logo has to be
   static const String LOGIN_TITLE = 'Login';
   static const String SERVER_ADDRESS = '';
+
   static Map<String, Messages> _MESSAGES = {
-    'it': new ItalianMessages(),
-    'en': new EnglishMessages(),
+    'it_IT': new ItalianMessages(),
+    'en_US': new EnglishMessages(),
   };
+
+  static void setLanguage({String language}){
+    _LANGUAGE = language;
+    MESSAGES = _MESSAGES[_LANGUAGE];
+  }
+
+  static String get LANGUAGE => _LANGUAGE;
+
 }

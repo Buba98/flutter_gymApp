@@ -8,13 +8,13 @@ class CustomColor {
     1: Color.fromRGBO(222, 44, 65, 1.0) //foreground
   };
 
-  MaterialColor materialBackground(){
-    return new MaterialColor(0xFF93cd48, _COLOR_CODES)[0];
+  MaterialColor material(){
+    return new MaterialColor(0xFF93cd48, _COLOR_CODES);
   }
 
-  MaterialColor materialForeground(){
-    return new MaterialColor(0xFF93cd48, _COLOR_CODES)[1];
-  }
+//  MaterialColor materialForeground(){
+//    return new MaterialColor(0xFF93cd48, _COLOR_CODES)[1];
+//  }
 
   Color background(){
     return _COLOR_CODES[0];

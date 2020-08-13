@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gym_app/utils/language/messages.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import '../constants.dart';
 
 class ButtonWithAnimation extends StatefulWidget{
 
@@ -38,7 +41,8 @@ class ButtonWithAnimationState extends State<ButtonWithAnimation> {
           child: IndexedStack(index: index, children: <Widget>[
             Center(
               child: Text(
-                'Accedi',
+                Constants.MESSAGES.message(
+                    type: MESSAGE_TYPE.ACCESS),
                 style: TextStyle(
                   color: Colors.white,
                   letterSpacing: 1.5,
