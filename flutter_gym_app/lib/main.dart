@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gym_app/screen/home_page.dart';
 import 'package:flutter_gym_app/screen/login_page.dart';
 import 'package:flutter_gym_app/utils/constants.dart';
-import 'package:flutter_gym_app/utils/language/messages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
