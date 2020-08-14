@@ -38,6 +38,8 @@ class EnglishMessages implements Messages {
         return 'Remaining days: ';
       case MESSAGE_TYPE.INSERT_UID:
         return 'Enter user ID';
+      case MESSAGE_TYPE.TRAINING_SCHEDULES:
+        return 'Training schedules';
     default:
         return '';
     }

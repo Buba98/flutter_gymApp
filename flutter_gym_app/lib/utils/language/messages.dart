@@ -15,7 +15,8 @@ enum MESSAGE_TYPE {
   ENTRANCE_CARD,
   REMAINING_DAYS,
   SCAN,
-  INSERT_UID
+  INSERT_UID,
+  TRAINING_SCHEDULES
 }
 
 abstract class Messages {

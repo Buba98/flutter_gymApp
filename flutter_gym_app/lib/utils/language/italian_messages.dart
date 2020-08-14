@@ -38,6 +38,8 @@ class ItalianMessages implements Messages {
         return 'Giorni rimanenti: ';
       case MESSAGE_TYPE.INSERT_UID:
         return 'Inserisci ID utente';
+      case MESSAGE_TYPE.TRAINING_SCHEDULES:
+        return 'Schede di allenamento';
       default:
         return '';
     }
