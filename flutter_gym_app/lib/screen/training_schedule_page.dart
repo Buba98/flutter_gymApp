@@ -41,7 +41,7 @@ class _TrainingSchedulePageState extends State<TrainingSchedulePage> {
       appBar: AppBar(
         backgroundColor: CustomColor().foreground(),
         title: Text(
-            Constants.MESSAGES.message(type: MESSAGE_TYPE.ENTRANCE_CARD)),
+            Constants.MESSAGES.message(type: MESSAGE_TYPE.TRAINING_SCHEDULES)),
       ),
       drawer: CustomDrawer().coloredDrawer(context),
       body: Center(
@@ -72,7 +72,7 @@ class _TrainingSchedulePageState extends State<TrainingSchedulePage> {
       appBar: AppBar(
         backgroundColor: CustomColor().foreground(),
         title: Text(
-            Constants.MESSAGES.message(type: MESSAGE_TYPE.ENTRANCE_CARD)),
+            Constants.MESSAGES.message(type: MESSAGE_TYPE.TRAINING_SCHEDULES)),
       ),
       drawer: CustomDrawer().mainDrawer(context),
       body: Padding(

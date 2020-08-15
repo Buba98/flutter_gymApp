@@ -40,6 +40,12 @@ class EnglishMessages implements Messages {
         return 'Enter user ID';
       case MESSAGE_TYPE.TRAINING_SCHEDULES:
         return 'Training schedules';
+      case MESSAGE_TYPE.EXERCISE:
+        return 'Exercise';
+      case MESSAGE_TYPE.REPS:
+        return 'Reps';
+      case MESSAGE_TYPE.SETS:
+        return 'Series';
     default:
         return '';
     }

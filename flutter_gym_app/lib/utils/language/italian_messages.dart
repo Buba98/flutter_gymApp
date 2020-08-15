@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import 'messages.dart';
 
 class ItalianMessages implements Messages {
@@ -40,6 +42,12 @@ class ItalianMessages implements Messages {
         return 'Inserisci ID utente';
       case MESSAGE_TYPE.TRAINING_SCHEDULES:
         return 'Schede di allenamento';
+      case MESSAGE_TYPE.EXERCISE:
+        return 'Esercizio';
+      case MESSAGE_TYPE.REPS:
+        return 'Ripetizioni';
+      case MESSAGE_TYPE.SETS:
+        return 'Serie';
       default:
         return '';
     }

@@ -16,7 +16,10 @@ enum MESSAGE_TYPE {
   REMAINING_DAYS,
   SCAN,
   INSERT_UID,
-  TRAINING_SCHEDULES
+  TRAINING_SCHEDULES,
+  EXERCISE,
+  SETS,
+  REPS,
 }
 
 abstract class Messages {
