@@ -102,16 +102,19 @@ class _TrainingSchedulePageState extends State<TrainingSchedulePage> {
     );
   }
 
-  Future<void> _getGridTile() async {
+  Future<void> _getGridTileList() async {
     http.Response response = await http.post(
         Constants.SERVER_ADDRESS + '/api/getTrainingSchedule', body: jsonEncode(
         <String, String>{'uid': Constants.PREFERENCES.get(Constants.UID)}));
     if (response.statusCode == 200) {
-      TrainingSchedule trainingSchedule = TrainingSchedule.fromJson(jsonDecode(response.body)['trainingSchedule']);
+      List<TrainingSchedule> trainingSchedules = jsonDecode(response.body)['trainingSchedule'].map((data) => TrainingSchedule.fromJson(data)).toList();
+      List<GridTile> gridTiles = [];
+      for(TrainingSchedule trainingSchedule in trainingSchedules){
+        gridTiles.add(CustomGridTile().tileSchedule(context: context, icon: Icons.insert_drive_file, text: trainingSchedule.startingDate.toString(), destination: ))
+      }
       setState(() {
 
       });
-
     } else {
       CustomAlert().standardAlert(context: context,
           alertType: AlertType.error,
