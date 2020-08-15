@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gym_app/screen/training_schedule_details_page.dart';
 import 'package:flutter_gym_app/utils/constants.dart';
 import 'package:flutter_gym_app/utils/custom_material_color.dart';
 import 'package:flutter_gym_app/utils/language/messages.dart';
@@ -78,8 +79,8 @@ class _TrainingSchedulePageState extends State<TrainingSchedulePage> {
         padding: EdgeInsets.only(top: 20),
         child: GridView(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.9,
+            crossAxisCount: 1,
+            childAspectRatio: 1,
           ),
           children: <GridTile>[
             CustomGridTile().tileSchedule(
@@ -107,13 +108,19 @@ class _TrainingSchedulePageState extends State<TrainingSchedulePage> {
         Constants.SERVER_ADDRESS + '/api/getTrainingSchedule', body: jsonEncode(
         <String, String>{'uid': Constants.PREFERENCES.get(Constants.UID)}));
     if (response.statusCode == 200) {
-      List<TrainingSchedule> trainingSchedules = jsonDecode(response.body)['trainingSchedule'].map((data) => TrainingSchedule.fromJson(data)).toList();
+      List<TrainingSchedule> trainingSchedules = jsonDecode(
+          response.body)['trainingSchedule'].map((data) =>
+          TrainingSchedule.fromJson(data)).toList();
       List<GridTile> gridTiles = [];
-      for(TrainingSchedule trainingSchedule in trainingSchedules){
-        gridTiles.add(CustomGridTile().tileSchedule(context: context, icon: Icons.insert_drive_file, text: trainingSchedule.startingDate.toString(), destination: ))
+      for (TrainingSchedule trainingSchedule in trainingSchedules) {
+        gridTiles.add(CustomGridTile().tileSchedule(context: context,
+            icon: Icons.insert_drive_file,
+            text: trainingSchedule.startingDate.toString(),
+            destination: TrainingScheduleDetailsPage(
+                context: context, trainingSchedule: trainingSchedule)));
       }
       setState(() {
-
+        _gridTileList = gridTiles;
       });
     } else {
       CustomAlert().standardAlert(context: context,
