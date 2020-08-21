@@ -48,6 +48,12 @@ class ItalianMessages implements Messages {
         return 'Ripetizioni';
       case MESSAGE_TYPE.SETS:
         return 'Serie';
+      case MESSAGE_TYPE.VIDEO:
+        return 'Video';
+      case MESSAGE_TYPE.NUMBER_ABBREVIATION:
+        return '№';
+      case MESSAGE_TYPE.SECOND_FOR_REP:
+        return 'Secondi per ripetizione';
       default:
         return '';
     }

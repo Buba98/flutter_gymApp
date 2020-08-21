@@ -20,6 +20,9 @@ enum MESSAGE_TYPE {
   EXERCISE,
   SETS,
   REPS,
+  VIDEO,
+  NUMBER_ABBREVIATION,
+  SECOND_FOR_REP
 }
 
 abstract class Messages {

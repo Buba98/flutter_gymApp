@@ -9,12 +9,10 @@ import 'package:flutter_gym_app/utils/language/messages.dart';
 import 'package:flutter_gym_app/utils/training/training_schedule.dart';
 import 'package:flutter_gym_app/utils/widgets/custom_alert.dart';
 import 'package:flutter_gym_app/utils/widgets/custom_drawer.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_gym_app/utils/widgets/custom_grid_tile.dart';
+ import 'package:flutter_gym_app/utils/widgets/custom_grid_tile.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:http/http.dart' as http;
 
-import 'entrance_page.dart';
 
 
 class TrainingSchedulePage extends StatefulWidget{
@@ -82,22 +80,7 @@ class _TrainingSchedulePageState extends State<TrainingSchedulePage> {
             crossAxisCount: 1,
             childAspectRatio: 1,
           ),
-          children: <GridTile>[
-            CustomGridTile().tileSchedule(
-                context: context,
-                text: Constants.MESSAGES.message(
-                    type: MESSAGE_TYPE.ENTRANCE_CARD),
-                icon: Icons.card_membership,
-                destination: EntrancePage()),
-            CustomGridTile().tileEntrance(
-                context: context,
-                text: Constants.MESSAGES.message(
-                    type: MESSAGE_TYPE.TRAINING_SCHEDULES),
-                icon: Icons.fitness_center,
-                destination: TrainingSchedulePage()
-            ),
-//            CustomGridTile().tileFunctionSelection(title: ),
-          ],
+          children: _gridTileList,
         ),
       ),
     );
