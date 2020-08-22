@@ -19,6 +19,8 @@ public interface PersonDao {
 
     Optional<Person> selectPersonById(UUID id);
 
+    Optional<Person> selectPersonByMail(String mail);
+
     int deletePersonById(UUID id);
 
     int updatePersonById(UUID id, Person person);
