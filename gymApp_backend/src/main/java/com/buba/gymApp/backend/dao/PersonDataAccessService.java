@@ -1,6 +1,6 @@
 package com.buba.gymApp.backend.dao;
 
-import com.buba.gymApp.backend.model.Person;
+import com.buba.gymApp.backend.model.person.Person;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class PersonDataAccessService implements PersonDao{
 
     @Override
     public List<Person> selectAllPeople() {
-        return List.of(new Person(UUID.randomUUID(), "FROM POSTGRES DB"));
+        return List.of(new Person(UUID.randomUUID(), "FROM POSTGRES DB", surname, cellphone, birtday, standardUser, email, indemnitys, entries, password, trainingSchedules));
     }
 
     @Override

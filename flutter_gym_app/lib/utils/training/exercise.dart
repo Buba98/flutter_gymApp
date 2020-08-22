@@ -17,7 +17,7 @@ class Exercise {
   int reps;
   int sets;
   int secondForRep;
-  int weight;
+  int weight;//todo list of lasts weights
   String urlVideo;
   String gifOrImage;
 

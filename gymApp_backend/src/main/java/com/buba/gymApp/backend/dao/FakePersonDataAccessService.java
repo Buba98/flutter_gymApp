@@ -1,6 +1,6 @@
 package com.buba.gymApp.backend.dao;
 
-import com.buba.gymApp.backend.model.Person;
+import com.buba.gymApp.backend.model.person.Person;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class FakePersonDataAccessService implements PersonDao {
 
     @Override
     public int insertPerson(UUID id, Person person) {
-        DB.add((new Person(id, person.getName())));
+        DB.add((new Person(id, person.getName(), surname, cellphone, birtday, standardUser, email, indemnitys, entries, password, trainingSchedules)));
         return 1;
     }
 
@@ -45,7 +45,7 @@ public class FakePersonDataAccessService implements PersonDao {
         return selectPersonById(id).map(p -> {
             int indexOfP = DB.indexOf(p);
             if (indexOfP >= 0) {
-                DB.set(indexOfP, new Person(id, person.getName()));
+                DB.set(indexOfP, new Person(id, person.getName(), surname, cellphone, birtday, standardUser, email, indemnitys, entries, password, trainingSchedules));
                 return 1;
             } else {
                 return 0;

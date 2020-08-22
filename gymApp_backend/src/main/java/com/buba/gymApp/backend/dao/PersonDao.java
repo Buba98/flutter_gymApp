@@ -1,6 +1,6 @@
 package com.buba.gymApp.backend.dao;
 
-import com.buba.gymApp.backend.model.Person;
+import com.buba.gymApp.backend.model.person.Person;
 
 import java.util.List;
 import java.util.Optional;
