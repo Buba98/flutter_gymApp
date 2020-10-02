@@ -100,7 +100,7 @@ class _TrainingSchedulePageState extends State<TrainingSchedulePage> {
             icon: Icons.insert_drive_file,
             text: trainingSchedule.startingDate.toString(),
             destination: TrainingScheduleDetailsPage(
-                context: context, trainingSchedule: trainingSchedule)));
+                context: context, trainingSchedule: null)));
       }
       setState(() {
         _gridTileList = gridTiles;

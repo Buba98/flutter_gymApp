@@ -32,7 +32,7 @@ class _EntrancePageState extends State<EntrancePage> {
       getRemainingDays();
       return userEntrance();
     } else {
-      return ownerEntrance();
+      return userEntrance();
     }
   }
 

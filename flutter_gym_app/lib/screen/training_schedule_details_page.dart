@@ -12,7 +12,7 @@ class TrainingScheduleDetailsPage extends StatefulWidget{
   final BuildContext context;
   final SingleTrainingSchedule singleTrainingSchedule;
 
-  TrainingScheduleDetailsPage({this.context, this.singleTrainingSchedule})
+  TrainingScheduleDetailsPage({this.context, this.singleTrainingSchedule, trainingSchedule})
 
 ;
 

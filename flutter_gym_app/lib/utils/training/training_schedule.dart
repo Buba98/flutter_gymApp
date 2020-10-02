@@ -22,12 +22,12 @@ class TrainingSchedule {
         startingDate = DateTime.parse(json['startingDate']),
         listTrainingSchedules = json['listTrainingSchedules'];
 
-  Map<String, dynamic> toJson() =>
-      {
-        'name': name,
-        'description': description,
-        'expirationDate': expirationDate.toString(),
-        'startingDate': startingDate.toString(),
-        'listTrainingSchedules': listTrainingSchedules.
-      };
+//  Map<String, dynamic> toJson() =>
+//      {
+//        'name': name,
+//        'description': description,
+//        'expirationDate': expirationDate.toString(),
+//        'startingDate': startingDate.toString(),
+//        'listTrainingSchedules': listTrainingSchedules.
+//      };
 }
