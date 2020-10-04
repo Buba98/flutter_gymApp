@@ -6,5 +6,6 @@ CREATE TABLE "user" (
     fiscalCode VARCHAR(20) UNIQUE,
     birthday date,
     password VARCHAR(100),
-    phoneNumber VARCHAR(20)
+    phoneNumber VARCHAR(20),
+    insurances date[]
 )

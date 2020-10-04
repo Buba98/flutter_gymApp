@@ -5,8 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 
 @Repository("postgres")
 public class UserDataAccessService implements UserDAO {
@@ -26,13 +27,7 @@ public class UserDataAccessService implements UserDAO {
     @Override
     public List<User> selectAllUsers() {
         String sql = "SELECT * FROM user";
-        List<User> users = jdbcTemplate.query(sql, (resultSet, i) -> {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-
-            return new User(id, name, surname);
-        });
-
+        List<User> users = jdbcTemplate.query(sql, (resultSet, i) -> fromResultSetToUser(resultSet));
         return users;
     }
 
@@ -49,13 +44,30 @@ public class UserDataAccessService implements UserDAO {
     @Override
     public Optional<User> selectUserById(int id) {
         String sql = "SELECT * FROM user WHERE id = ?";
-        User user =  jdbcTemplate.queryForObject(sql, new Object[]{id}, (resultSet, i) -> {
-            int _id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-
-            return new User(_id, name, surname);
-        });
+        User user =  jdbcTemplate.queryForObject(sql, new Object[]{id}, (resultSet, i) -> fromResultSetToUser(resultSet));
         return Optional.ofNullable(user);
+    }
 
+    @Override
+    public User selectUserByEmail(String email) {
+        String sql = "SELECT * FROM user WHERE email = ?";
+        User user = jdbcTemplate.queryForObject(sql, new Object[]{email}, ((resultSet, i) -> fromResultSetToUser(resultSet)));
+        return user;
+    }
+
+    private User fromResultSetToUser(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("id");
+        String fiscalCode = resultSet.getString("fiscalCode");
+        String name = resultSet.getString("name");
+        String surname = resultSet.getString("surname");
+        List<Integer> userTrainingSchedule = new ArrayList<>();//todo
+        Date birthday = resultSet.getDate("birthday");
+        String email = resultSet.getString("email");
+        String password = resultSet.getString("password");
+        String phoneNumber = resultSet.getString("phoneNumber");
+        List<Integer> userSubscriptions = new ArrayList<>(); //todo
+        List<Date> insurances = Arrays.asList((Date[]) resultSet.getArray("insurances").getArray());
+
+        return new User(id, name, surname, fiscalCode, birthday, userTrainingSchedule, email, password, phoneNumber, userSubscriptions, insurances);
     }
 }

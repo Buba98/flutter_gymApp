@@ -10,5 +10,5 @@ public interface SessionDAO {
 
     void deleteSessionByUserId(int userId);
 
-    int selectSessionByUUID(UUID id);
+    Integer selectSessionByUUID(UUID id);
 }

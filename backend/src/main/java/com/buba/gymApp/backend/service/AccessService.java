@@ -27,8 +27,10 @@ public class AccessService {
 
         if (user == null)
             return null;
-
-        return sessionDAO.insertSession(user.getId());
+        else if (!user.getPassword().equals(password))
+            return null;
+        else
+            return sessionDAO.insertSession(user.getId());
     }
 
     public int addUser(String fiscalCode, String name, String surname, Date birthday, String email, String password, String phoneNumber){

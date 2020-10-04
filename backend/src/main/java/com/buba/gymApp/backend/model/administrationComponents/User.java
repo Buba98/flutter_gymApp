@@ -2,6 +2,7 @@ package com.buba.gymApp.backend.model.administrationComponents;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.Entity;
 import java.util.Date;
 import java.util.List;
 
