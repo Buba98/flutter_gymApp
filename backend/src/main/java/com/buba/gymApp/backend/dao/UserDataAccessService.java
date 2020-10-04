@@ -1,6 +1,6 @@
 package com.buba.gymApp.backend.dao;
 
-import com.buba.gymApp.backend.model.User;
+import com.buba.gymApp.backend.model.administrationComponents.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -30,7 +30,7 @@ public class UserDataAccessService implements UserDAO {
             int id = resultSet.getInt("id");
             String name = resultSet.getString("name");
 
-            return new User(id, name);
+            return new User(id, name, surname);
         });
 
         return users;
@@ -53,7 +53,7 @@ public class UserDataAccessService implements UserDAO {
             int _id = resultSet.getInt("id");
             String name = resultSet.getString("name");
 
-            return new User(_id, name);
+            return new User(_id, name, surname);
         });
         return Optional.ofNullable(user);
 

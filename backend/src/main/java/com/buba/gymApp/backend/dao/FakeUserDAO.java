@@ -1,6 +1,6 @@
 package com.buba.gymApp.backend.dao;
 
-import com.buba.gymApp.backend.model.User;
+import com.buba.gymApp.backend.model.administrationComponents.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.buba.gymApp.backend.api;
 
-import com.buba.gymApp.backend.model.User;
+import com.buba.gymApp.backend.model.administrationComponents.User;
 import com.buba.gymApp.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;

@@ -1,7 +1,7 @@
 package com.buba.gymApp.backend.service;
 
 import com.buba.gymApp.backend.dao.UserDAO;
-import com.buba.gymApp.backend.model.User;
+import com.buba.gymApp.backend.model.administrationComponents.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
