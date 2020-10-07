@@ -1,14 +1,16 @@
 package com.buba.gymApp.backend.dao.sessionDAO;
 
+import com.buba.gymApp.backend.model.administrationComponents.Session;
+
 import java.util.UUID;
 
 public interface SessionDAO {
 
-    UUID insertSession(int userId);
+    Session insertSession(int userId);
 
-    UUID selectSessionByUserId(int userId);
+    Session selectSessionByUserId(int userId);
 
-    void deleteSessionByUserId(int userId);
+    boolean deleteSessionByUserId(int userId);
 
-    Integer selectSessionByUUID(UUID id);
+    Session selectSessionByUUID(UUID id);
 }

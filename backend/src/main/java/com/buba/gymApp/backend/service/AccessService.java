@@ -1,7 +1,8 @@
 package com.buba.gymApp.backend.service;
 
-import com.buba.gymApp.backend.dao.UserDAO;
+import com.buba.gymApp.backend.dao.userDAO.UserDAO;
 import com.buba.gymApp.backend.dao.sessionDAO.SessionDAO;
+import com.buba.gymApp.backend.model.administrationComponents.Session;
 import com.buba.gymApp.backend.model.administrationComponents.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,12 +18,12 @@ public class AccessService {
     private final SessionDAO sessionDAO;
 
     @Autowired
-    public AccessService(@Qualifier("postgres") UserDAO userDAO, @Qualifier("postgres") SessionDAO sessionDAO){
+    public AccessService(@Qualifier("postgresUser") UserDAO userDAO, @Qualifier("postgresSession") SessionDAO sessionDAO){
         this.userDAO = userDAO;
         this.sessionDAO = sessionDAO;
     }
 
-    public UUID getUUIDForSignIn(String email, String password){
+    public Session getUUIDForSignIn(String email, String password){
         User user = userDAO.selectUserByEmail(email);
 
         if (user == null)
@@ -33,7 +34,20 @@ public class AccessService {
             return sessionDAO.insertSession(user.getId());
     }
 
-    public int addUser(String fiscalCode, String name, String surname, Date birthday, String email, String password, String phoneNumber){
-        return 0;
+    public int signUp(String fiscalCode, String name, String surname, Date birthday, String email, String password, String phoneNumber, boolean owner){
+        User user = new User(null, name, surname, fiscalCode, birthday, null, email, password, phoneNumber, null, null, owner);
+
+        if (userDAO.selectUserByEmail(email) != null)
+            return 1;
+        if (userDAO.selectUserByFiscalCode(fiscalCode) != null)
+            return 0;
+
+        if (userDAO.insertUser(user).getId() == null)
+            return -1;
+        else return 2;
+    }
+
+    public boolean isOwner(UUID id){
+        return userDAO.selectUserById(sessionDAO.selectSessionByUUID(id).getUserId()).isOwner();
     }
 }

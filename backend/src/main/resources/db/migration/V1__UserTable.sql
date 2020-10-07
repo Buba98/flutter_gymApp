@@ -7,5 +7,6 @@ CREATE TABLE "user" (
     birthday date,
     password VARCHAR(100),
     phoneNumber VARCHAR(20),
-    insurances date[]
+    insurances date[],
+    owner boolean DEFAULT false
 )

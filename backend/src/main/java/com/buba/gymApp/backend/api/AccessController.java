@@ -1,5 +1,6 @@
 package com.buba.gymApp.backend.api;
 
+import com.buba.gymApp.backend.model.administrationComponents.Session;
 import com.buba.gymApp.backend.service.AccessService;
 import com.buba.gymApp.backend.utils.Converters;
 import com.buba.gymApp.backend.utils.StatusResponse;
@@ -11,8 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.UUID;
 
 @RequestMapping("api/v1/access")
 @RestController
@@ -31,7 +30,7 @@ public class AccessController {
         String email = json.get("email").getAsString();
         String password = json.get("password").getAsString();
 
-        UUID sessionUUID = accessService.getUUIDForSignIn(email, password);
+        Session sessionUUID = accessService.getUUIDForSignIn(email, password);
 
         StatusResponse response;
 
@@ -55,10 +54,11 @@ public class AccessController {
         String email = json.get("email").getAsString();
         String password = json.get("password").getAsString();
         String phoneNumber = json.get("phoneNumber").getAsString();
+        boolean owner = json.get("owner").getAsBoolean();
 
         StatusResponse response;
 
-        switch (accessService.addUser(fiscalCode, name, surname, Converters.fromStringToUtil(birthday), email, password, phoneNumber)){
+        switch (accessService.signUp(fiscalCode, name, surname, Converters.fromStringToUtil(birthday), email, password, phoneNumber, owner)){
             case 0:
                 response = new StatusResponse(409, "Fiscal code already exists");
                 break;

@@ -2,13 +2,12 @@ package com.buba.gymApp.backend.model.administrationComponents;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Entity;
 import java.util.Date;
 import java.util.List;
 
 public class User {
 
-    private int id;
+    private Integer id;
 
     private String fiscalCode;
 
@@ -30,7 +29,9 @@ public class User {
 
     private List<Date> insurances;
 
-    public User(@JsonProperty("id") int id,
+    private boolean owner;
+
+    public User(@JsonProperty("id") Integer id,
                 @JsonProperty("name") String name,
                 @JsonProperty("surname") String surname,
                 @JsonProperty("fiscalCode") String fiscalCode,
@@ -40,7 +41,8 @@ public class User {
                 @JsonProperty("password") String password,
                 @JsonProperty("phoneNumber") String phoneNumber,
                 @JsonProperty("userSubscriptions") List<Integer> userSubscriptions,
-                @JsonProperty("insurances") List<Date> insurances) {
+                @JsonProperty("insurances") List<Date> insurances,
+                @JsonProperty("owner") boolean owner) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -52,13 +54,22 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.userSubscriptions = userSubscriptions;
         this.insurances = insurances;
+        this.owner = owner;
     }
 
-    public int getId() {
+    public boolean isOwner() {
+        return owner;
+    }
+
+    public void setOwner(boolean owner) {
+        this.owner = owner;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

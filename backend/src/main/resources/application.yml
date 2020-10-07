@@ -1,6 +1,6 @@
 app:
   datasource:
     jdbc-url: jdbc:postgresql://localhost:5432/gymappdb
-    username: username
-    password: password
+    username: bodypower
+    password: Vinsent22!
     pool-size: 30
