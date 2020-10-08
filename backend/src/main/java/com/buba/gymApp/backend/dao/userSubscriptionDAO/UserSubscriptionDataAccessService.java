@@ -1,6 +1,5 @@
 package com.buba.gymApp.backend.dao.userSubscriptionDAO;
 
-import com.buba.gymApp.backend.model.administrationComponents.User;
 import com.buba.gymApp.backend.model.administrationComponents.UserSubscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,7 +23,7 @@ public class UserSubscriptionDataAccessService implements UserSubscriptionDAO {
     }
 
     @Override
-    public UserSubscription insertSubscription(UserSubscription userSubscription) {
+    public UserSubscription insertUserSubscription(UserSubscription userSubscription) {
         String sql = "INSERT INTO \"userSubscription\" (userid, subscriptionid, entrancedone, startdate, enddate) VALUES (?, ?, ?, ?, ?)";
 
         Object[] objects = new Object[]{userSubscription.getUserId(), userSubscription.getSubscriptionId(), userSubscription.getEntranceDone(), userSubscription.getStartDate(), userSubscription.getEndDate()};
@@ -37,14 +36,22 @@ public class UserSubscriptionDataAccessService implements UserSubscriptionDAO {
     }
 
     @Override
-    public List<UserSubscription> getAllSubscriptionsByUserId(int userId){
-        String sql = "SELECT FROM \"userSubscription\" WHERE userid = ?";
+    public List<UserSubscription> getAllUserSubscriptionsByUserId(int userId){
+        String sql = "SELECT * FROM \"userSubscription\" WHERE userid = ?";
 
         return jdbcTemplate.query(sql, new Object[]{userId}, (((resultSet, i) -> fromResultSetToUserSubscription(resultSet))));
     }
 
-    public List<UserSubscription> getAllNotExpiredSubscriptionsByUserId(int userId){
-        String sql = "SELECT FROM \"userSubscription\" WHERE userid = ? AND enddate > now()";
+    @Override
+    public List<Integer> getAllUserSubscriptionsIdsByUserId(int userId) {
+        String sql = "SELECT id FROM \"userSubscription\" WHERE userid = ?";
+
+        return jdbcTemplate.query(sql, new Object[]{userId}, (((resultSet, i) -> resultSet.getInt("id"))));
+    }
+
+    @Override
+    public List<UserSubscription> getAllNotExpiredUserSubscriptionsByUserId(int userId){
+        String sql = "SELECT * FROM \"userSubscription\" WHERE userid = ? AND enddate > now()";
 
         return jdbcTemplate.query(sql, new Object[]{userId}, (((resultSet, i) -> fromResultSetToUserSubscription(resultSet))));
     }

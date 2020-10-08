@@ -1,8 +1,10 @@
 package com.buba.gymApp.backend.dao.userDAO;
 
+import com.buba.gymApp.backend.dao.userSubscriptionDAO.UserSubscriptionDAO;
 import com.buba.gymApp.backend.model.administrationComponents.User;
 import com.buba.gymApp.backend.utils.Converters;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -16,10 +18,12 @@ import java.util.*;
 public class UserDataAccessService implements UserDAO {
 
     private final JdbcTemplate jdbcTemplate;
+    private final UserSubscriptionDAO userSubscriptionDAO;
 
     @Autowired
-    public UserDataAccessService(JdbcTemplate jdbcTemplate) {
+    public UserDataAccessService(JdbcTemplate jdbcTemplate, @Qualifier("postgresUserSubscription") UserSubscriptionDAO userSubscriptionDAO) {
         this.jdbcTemplate = jdbcTemplate;
+        this.userSubscriptionDAO = userSubscriptionDAO;
     }
 
     @Override
@@ -90,7 +94,7 @@ public class UserDataAccessService implements UserDAO {
         String email = resultSet.getString("email");
         String password = resultSet.getString("password");
         String phoneNumber = resultSet.getString("phoneNumber");
-        List<Integer> userSubscriptions = new ArrayList<>(); //todo
+        List<Integer> userSubscriptions = userSubscriptionDAO.getAllUserSubscriptionsIdsByUserId(resultSet.getInt("id"));
         List<Date> insurances = Arrays.asList((Date[]) resultSet.getArray("insurances").getArray());
         boolean owner = resultSet.getBoolean("owner");
 

@@ -5,6 +5,7 @@ public enum RequestType {
     INSURANCE_PAYMENT(1),
     SUBSCRIPTION_PAYMENT(2),
     ENTRANCE(3),
+    NEW_SUBSCRIPTION_TYPE(4),
     BAD_REQUEST(-1);
 
     int type;
@@ -19,6 +20,7 @@ public enum RequestType {
             case 1: return INSURANCE_PAYMENT;
             case 2: return SUBSCRIPTION_PAYMENT;
             case 3: return ENTRANCE;
+            case 4: return NEW_SUBSCRIPTION_TYPE;
             default: return BAD_REQUEST;
         }
     }

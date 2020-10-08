@@ -30,7 +30,7 @@ public class AdministrationController {
     }
 
     @PostMapping
-    public String singUp(@RequestBody String jsonString) {
+    public String initialChecks(@RequestBody String jsonString) {
 
 
         //check for correct json
@@ -74,14 +74,28 @@ public class AdministrationController {
                 return subscriptionPayment(json);
             case ENTRANCE:
 
+            case NEW_SUBSCRIPTION_TYPE:
+                return newSubscriptionType(json);
             default:
                 return new Gson().toJson(new StatusResponse(400, "Bad request"));
         }
 
     }
 
-    private String entranceCheck(){
+    private String newSubscriptionType(JsonObject json){
+        int mouthDuration = json.get("mouthDuration").getAsInt();
+        float cost = json.get("cost").getAsFloat();
+        int maxEntrances  = json.get("maxEntrances").getAsInt();
 
+        switch (paymentService.addSubscription(maxEntrances, cost, mouthDuration)){
+            case 0:
+                return new Gson().toJson(new StatusResponse(400, "Subscription already exists"));
+            case 1:
+                return new Gson().toJson(new StatusResponse(200, "Ok"));
+            default:
+                return new Gson().toJson(new StatusResponse(600, "Internal server error"));
+
+        }
     }
 
     private String insurancePayment(JsonObject json) {
@@ -95,10 +109,16 @@ public class AdministrationController {
             return new Gson().toJson(new StatusResponse(400, "Bad request"));
         }
 
-        if (paymentService.addInsurancePaymentByUserId(id))
-            return new Gson().toJson(new StatusResponse(200, "OK"));
-        else
-            return new Gson().toJson(new StatusResponse(400, "User not exist"));
+        switch (paymentService.addInsurancePaymentByUserId(id)){
+            case 0:
+                return new Gson().toJson(new StatusResponse(400, "User not exist"));
+            case 1:
+                return new Gson().toJson(new StatusResponse(200, "OK"));
+            case 2:
+                return new Gson().toJson(new StatusResponse(400, "Insurance not expired yet"));
+            default:
+                return new Gson().toJson(new StatusResponse(600, "Internal server error"));
+        }
     }
 
     private String signUp(JsonObject json) {
@@ -125,7 +145,7 @@ public class AdministrationController {
                 response = new StatusResponse(200, "Success");
                 break;
             default:
-                response = new StatusResponse(500, "Generic server error");
+                response = new StatusResponse(600, "Internal server error");
                 break;
         }
 
@@ -144,9 +164,17 @@ public class AdministrationController {
             return new Gson().toJson(new StatusResponse(400, "Bad request"));
         }
 
-        if (paymentService.addSubscription(id, subscriptionId))
-            return new Gson().toJson(new StatusResponse(200, "OK"));
-        else
-            return new Gson().toJson(new StatusResponse(400, "User not exist"));
+        switch (paymentService.addUserSubscription(id, subscriptionId)){
+            case 0:
+                return new Gson().toJson(new StatusResponse(400, "Subscription type doesn't exists"));
+            case 1:
+                return new Gson().toJson(new StatusResponse(400, "User doesn't exists"));
+            case 2:
+                return new Gson().toJson(new StatusResponse(200, "OK"));
+            case 3:
+                return new Gson().toJson(new StatusResponse(400, "User subscription not expired yet"));
+            default:
+                return new Gson().toJson(new StatusResponse(600, "Internal server error"));
+        }
     }
 }

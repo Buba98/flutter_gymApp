@@ -23,9 +23,6 @@ public class SubscriptionDataAccessService implements  SubscriptionDAO{
     @Override
     public Subscription insertSubscription(Subscription subscription) {
 
-        if (selectSubscriptionByEverything(subscription) != null)
-            return subscription;
-
         String sql = "INSERT INTO subscription (mouthduration, cost, maxentrance) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql, subscription.getMouthDuration(), subscription.getCost(), subscription.getMaxEntrances(), keyHolder);

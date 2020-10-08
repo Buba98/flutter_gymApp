@@ -6,7 +6,7 @@ public class Subscription {
     private float cost;
     private int maxEntrances;
 
-    public Subscription(int id, int mouthDuration, float cost, int maxEntrances) {
+    public Subscription(Integer id, int mouthDuration, float cost, int maxEntrances) {
         this.id = id;
         this.mouthDuration = mouthDuration;
         this.cost = cost;
