@@ -3,14 +3,14 @@ package com.buba.gymApp.backend.model.administrationComponents;
 import java.util.Date;
 
 public class UserSubscription {
-    private int id;
+    private Integer id;
     private int subscriptionId;
     private int entranceDone;
     private int userId;
     private Date startDate;
     private Date endDate;
 
-    public UserSubscription(int id, int subscriptionId, int entranceDone, int userId, Date startDate, Date endDate) {
+    public UserSubscription(Integer id, int subscriptionId, int entranceDone, int userId, Date startDate, Date endDate) {
         this.id = id;
         this.subscriptionId = subscriptionId;
         this.entranceDone = entranceDone;
@@ -19,11 +19,11 @@ public class UserSubscription {
         this.endDate = endDate;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

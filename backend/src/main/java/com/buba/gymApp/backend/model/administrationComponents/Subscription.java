@@ -4,14 +4,12 @@ public class Subscription {
     private int id;
     private int mouthDuration;
     private float cost;
-    private SubscriptionType subscriptionType;
     private int maxEntrances;
 
-    public Subscription(int id, int mouthDuration, float cost, SubscriptionType subscriptionType, int maxEntrances) {
+    public Subscription(int id, int mouthDuration, float cost, int maxEntrances) {
         this.id = id;
         this.mouthDuration = mouthDuration;
         this.cost = cost;
-        this.subscriptionType = subscriptionType;
         this.maxEntrances = maxEntrances;
     }
 
@@ -37,14 +35,6 @@ public class Subscription {
 
     public void setCost(float cost) {
         this.cost = cost;
-    }
-
-    public SubscriptionType getSubscriptionType() {
-        return subscriptionType;
-    }
-
-    public void setSubscriptionType(SubscriptionType subscriptionType) {
-        this.subscriptionType = subscriptionType;
     }
 
     public int getMaxEntrances() {
