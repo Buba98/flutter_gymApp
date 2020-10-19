@@ -177,4 +177,8 @@ public class AdministrationController {
                 return new Gson().toJson(new StatusResponse(600, "Internal server error"));
         }
     }
+
+    private String entranceRegistration(){
+
+    }
 }

@@ -1,7 +1,9 @@
 package com.buba.gymApp.backend.dao.userSubscriptionDAO;
 
+import com.buba.gymApp.backend.dao.subscriptionDAO.SubscriptionDAO;
 import com.buba.gymApp.backend.model.administrationComponents.UserSubscription;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -16,10 +18,12 @@ import java.util.List;
 public class UserSubscriptionDataAccessService implements UserSubscriptionDAO {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SubscriptionDAO subscriptionDAO;
 
     @Autowired
-    public UserSubscriptionDataAccessService(JdbcTemplate jdbcTemplate) {
+    public UserSubscriptionDataAccessService(JdbcTemplate jdbcTemplate, @Qualifier("postgresSubscription") SubscriptionDAO subscriptionDAO) {
         this.jdbcTemplate = jdbcTemplate;
+        this.subscriptionDAO = subscriptionDAO;
     }
 
     @Override
@@ -53,7 +57,10 @@ public class UserSubscriptionDataAccessService implements UserSubscriptionDAO {
     public List<UserSubscription> getAllNotExpiredUserSubscriptionsByUserId(int userId){
         String sql = "SELECT * FROM \"userSubscription\" WHERE userid = ? AND enddate > now()";
 
-        return jdbcTemplate.query(sql, new Object[]{userId}, (((resultSet, i) -> fromResultSetToUserSubscription(resultSet))));
+        List<UserSubscription> userSubscriptions = jdbcTemplate.query(sql, new Object[]{userId}, (((resultSet, i) -> fromResultSetToUserSubscription(resultSet))));
+        userSubscriptions.removeIf(userSubscription -> subscriptionDAO.selectSubscriptionById(userSubscription.getSubscriptionId()).getMaxEntrances() > 0 && userSubscription.getEntranceDone() >= subscriptionDAO.selectSubscriptionById(userSubscription.getSubscriptionId()).getMaxEntrances());
+
+        return userSubscriptions;
     }
 
     private UserSubscription fromResultSetToUserSubscription(ResultSet resultSet) throws SQLException {

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -80,4 +81,14 @@ public class PaymentService {
             return 1;
     }
 
+    public int addEntrance(int userId){
+        User user = userDAO.selectUserById(userId);
+
+        if (user == null)
+            return 0;
+
+        List<UserSubscription> userSubscriptionList = userSubscriptionDAO.getAllNotExpiredUserSubscriptionsByUserId(user.getId());
+
+
+    }
 }
