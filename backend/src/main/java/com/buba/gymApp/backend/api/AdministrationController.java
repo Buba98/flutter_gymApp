@@ -2,19 +2,22 @@ package com.buba.gymApp.backend.api;
 
 import com.buba.gymApp.backend.service.AccessService;
 import com.buba.gymApp.backend.service.PaymentService;
+import com.buba.gymApp.backend.service.ToolService;
+import com.buba.gymApp.backend.utils.Constants;
 import com.buba.gymApp.backend.utils.Converters;
 import com.buba.gymApp.backend.utils.RequestType;
 import com.buba.gymApp.backend.utils.StatusResponse;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.invoke.ConstantBootstraps;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @RequestMapping("api/v1/administration")
@@ -22,16 +25,17 @@ import java.util.UUID;
 public class AdministrationController {
     private final AccessService accessService;
     private final PaymentService paymentService;
+    private final ToolService toolService;
 
     @Autowired
-    public AdministrationController(AccessService accessService, PaymentService paymentService) {
+    public AdministrationController(AccessService accessService, PaymentService paymentService, ToolService toolService) {
         this.accessService = accessService;
         this.paymentService = paymentService;
+        this.toolService = toolService;
     }
 
     @PostMapping
     public String initialChecks(@RequestBody String jsonString) {
-
 
         //check for correct json
         JsonObject json;
@@ -47,7 +51,7 @@ public class AdministrationController {
 
         try {
             uuid = UUID.fromString(json.get("uuidAuthentication").getAsString());
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e ) {
             e.printStackTrace();
             return new Gson().toJson(new StatusResponse(400, "Bad request"));
         }
@@ -73,9 +77,11 @@ public class AdministrationController {
             case SUBSCRIPTION_PAYMENT:
                 return subscriptionPayment(json);
             case ENTRANCE:
-
+                return entranceRegistration(json);
             case NEW_SUBSCRIPTION_TYPE:
                 return newSubscriptionType(json);
+            case AUTOCOMPLETE:
+                return autocomplete(json);
             default:
                 return new Gson().toJson(new StatusResponse(400, "Bad request"));
         }
@@ -123,18 +129,33 @@ public class AdministrationController {
 
     private String signUp(JsonObject json) {
 
-        String fiscalCode = json.get("fiscalCode").getAsString();
-        String name = json.get("name").getAsString();
-        String surname = json.get("surname").getAsString();
-        String birthday = json.get("birthday").getAsString();
-        String email = json.get("email").getAsString();
-        String password = json.get("password").getAsString();
-        String phoneNumber = json.get("phoneNumber").getAsString();
-        boolean owner = json.get("owner").getAsBoolean();
+        String fiscalCode;
+        String name;
+        String surname;
+        Date birthday;
+        String email;
+        String password;
+        String phoneNumber;
+        boolean owner;
+
+        try {
+            fiscalCode = json.get("fiscalCode").getAsString();
+            name = json.get("name").getAsString();
+            surname = json.get("surname").getAsString();
+            birthday = Converters.fromStringToUtil(json.get("birthday").getAsString());
+            email = json.get("email").getAsString();
+            password = json.get("password").getAsString();
+            phoneNumber = json.get("phoneNumber").getAsString();
+            owner = json.get("owner").getAsBoolean();
+
+        } catch (NullPointerException | ParseException e){
+            e.printStackTrace();
+            return new Gson().toJson(new StatusResponse(400, "Error in request"));
+        }
 
         StatusResponse response;
 
-        switch (accessService.signUp(fiscalCode, name, surname, Converters.fromStringToUtil(birthday), email, password, phoneNumber, owner)) {
+        switch (accessService.signUp(fiscalCode, name, surname, birthday, email, password, phoneNumber, owner)) {
             case 0:
                 response = new StatusResponse(409, "Fiscal code already exists");
                 break;
@@ -178,7 +199,33 @@ public class AdministrationController {
         }
     }
 
-    private String entranceRegistration(){
+    private String entranceRegistration(JsonObject json){
+        int id;
+
+        try {
+            id = Integer.parseInt(json.get("userId").getAsString());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return new Gson().toJson(new StatusResponse(400, "Bad request"));
+        }
+
+        switch (paymentService.addEntrance(id)){
+            case 0:
+                return new Gson().toJson(new StatusResponse(200, "OK"));
+            case 1:
+                return new Gson().toJson(new StatusResponse(400, "No valid subscription found"));
+            default:
+                return new Gson().toJson(new StatusResponse(600, "Internal server error"));
+        }
+    }
+
+    private String autocomplete(JsonObject json) {
+        try {
+            return Constants.gsonInstance.toJson(new StatusResponse(200, toolService.autocomplete(json.get("context").getAsString(), json.get("pattern").getAsJsonObject()).toString()));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return new Gson().toJson(new StatusResponse(400, "Error in request"));
+        }
 
     }
 }

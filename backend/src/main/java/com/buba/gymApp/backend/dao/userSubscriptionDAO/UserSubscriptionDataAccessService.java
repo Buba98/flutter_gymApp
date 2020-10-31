@@ -4,6 +4,7 @@ import com.buba.gymApp.backend.dao.subscriptionDAO.SubscriptionDAO;
 import com.buba.gymApp.backend.model.administrationComponents.UserSubscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -33,34 +34,62 @@ public class UserSubscriptionDataAccessService implements UserSubscriptionDAO {
         Object[] objects = new Object[]{userSubscription.getUserId(), userSubscription.getSubscriptionId(), userSubscription.getEntranceDone(), userSubscription.getStartDate(), userSubscription.getEndDate()};
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
+     try {
         jdbcTemplate.update(sql,objects, keyHolder);
-
+    } catch (
+    DataAccessException e) {
+        e.printStackTrace();
+        return null;
+    }
         userSubscription.setId(keyHolder.getKey().intValue());
         return userSubscription;
+    }
+
+    @Override
+    public boolean updateAll(UserSubscription userSubscription){
+        String sql = "UPDATE \"userSubscription\" SET entrancedone = ?, startdate = ?, enddate = ? WHERE id = ?";
+
+        Object[] objects = new Object[]{userSubscription.getEntranceDone(), userSubscription.getStartDate(), userSubscription.getEndDate(), userSubscription.getId()};
+
+        jdbcTemplate.update(sql, objects);
+        return true;
     }
 
     @Override
     public List<UserSubscription> getAllUserSubscriptionsByUserId(int userId){
         String sql = "SELECT * FROM \"userSubscription\" WHERE userid = ?";
 
+        try {
         return jdbcTemplate.query(sql, new Object[]{userId}, (((resultSet, i) -> fromResultSetToUserSubscription(resultSet))));
+    } catch (DataAccessException e) {
+        e.printStackTrace();
+        return null;
+    }
     }
 
     @Override
     public List<Integer> getAllUserSubscriptionsIdsByUserId(int userId) {
         String sql = "SELECT id FROM \"userSubscription\" WHERE userid = ?";
 
-        return jdbcTemplate.query(sql, new Object[]{userId}, (((resultSet, i) -> resultSet.getInt("id"))));
+        try {
+            return jdbcTemplate.query(sql, new Object[]{userId}, (((resultSet, i) -> resultSet.getInt("id"))));
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public List<UserSubscription> getAllNotExpiredUserSubscriptionsByUserId(int userId){
         String sql = "SELECT * FROM \"userSubscription\" WHERE userid = ? AND enddate > now()";
-
+        try {
         List<UserSubscription> userSubscriptions = jdbcTemplate.query(sql, new Object[]{userId}, (((resultSet, i) -> fromResultSetToUserSubscription(resultSet))));
-        userSubscriptions.removeIf(userSubscription -> subscriptionDAO.selectSubscriptionById(userSubscription.getSubscriptionId()).getMaxEntrances() > 0 && userSubscription.getEntranceDone() >= subscriptionDAO.selectSubscriptionById(userSubscription.getSubscriptionId()).getMaxEntrances());
-
-        return userSubscriptions;
+            userSubscriptions.removeIf(userSubscription -> subscriptionDAO.selectSubscriptionById(userSubscription.getSubscriptionId()).getMaxEntrances() > 0 && userSubscription.getEntranceDone() >= subscriptionDAO.selectSubscriptionById(userSubscription.getSubscriptionId()).getMaxEntrances());
+            return userSubscriptions;
+    } catch (DataAccessException e) {
+        e.printStackTrace();
+        return null;
+    }
     }
 
     private UserSubscription fromResultSetToUserSubscription(ResultSet resultSet) throws SQLException {

@@ -20,4 +20,6 @@ public interface UserDAO {
     User selectUserByEmail(String email);
 
     User selectUserByFiscalCode(String fiscalCode);
+
+    List<String[]> selectForAutocomplete(String name, String surname);
 }

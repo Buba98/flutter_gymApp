@@ -2,6 +2,7 @@ package com.buba.gymApp.backend.dao.sessionDAO;
 
 import com.buba.gymApp.backend.model.administrationComponents.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -28,7 +29,7 @@ public class SessionDataAccessService implements SessionDAO {
 
         UUID id = null;
 
-        while (id == null){
+        while (id == null) {
             id = UUID.randomUUID();
             if (selectSessionByUUID(id) != null)
                 id = null;
@@ -36,9 +37,14 @@ public class SessionDataAccessService implements SessionDAO {
 
         String sql = "INSERT INTO session (uuid, userid, dateexpiring) values (?, ?, ?)";
 
-        Session session = new Session(id, userId,  new Date(new Date().getTime() + TimeUnit.DAYS.toMillis(31)));
+        Session session = new Session(id, userId, new Date(new Date().getTime() + TimeUnit.DAYS.toMillis(31)));
 
-        jdbcTemplate.update(sql, session.getId(), session.getUserId(), session.getDateExpiring());
+        try {
+            jdbcTemplate.update(sql, session.getId(), session.getUserId(), session.getDateExpiring());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
 
         return session;
     }
@@ -46,21 +52,36 @@ public class SessionDataAccessService implements SessionDAO {
     @Override
     public Session selectSessionByUserId(int userId) {
         String sql = "SELECT * FROM session WHERE userid = ?";
-
-        return jdbcTemplate.queryForObject(sql, new Object[]{userId}, ((resultSet, i) -> fromResultSetToSession(resultSet)));
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{userId}, ((resultSet, i) -> fromResultSetToSession(resultSet)));
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public boolean deleteSessionByUserId(int userId) {
         String sql = "DELETE FROM session WHERE userid = ?";
-        return jdbcTemplate.update(sql, userId) == 1;
+        try {
+            return jdbcTemplate.update(sql, userId) == 1;
+        }
+        catch (DataAccessException e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public Session selectSessionByUUID(UUID id) {
         String sql = "SELECT * FROM session WHERE uuid = ?";
 
-        return jdbcTemplate.queryForObject(sql, new Object[]{id.toString()}, ((resultSet, i) -> fromResultSetToSession(resultSet)));
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{id}, ((resultSet, i) -> fromResultSetToSession(resultSet)));
+        } catch (DataAccessException e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private Session fromResultSetToSession(ResultSet resultSet) throws SQLException {

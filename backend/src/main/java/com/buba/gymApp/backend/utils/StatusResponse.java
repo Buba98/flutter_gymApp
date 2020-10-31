@@ -11,6 +11,7 @@ public class StatusResponse {
     public StatusResponse(int status) {
         this.status = status;
     }
+
     public StatusResponse(int status, String token) {
         this.status = status;
         this.token = token;

@@ -6,6 +6,7 @@ public enum RequestType {
     SUBSCRIPTION_PAYMENT(2),
     ENTRANCE(3),
     NEW_SUBSCRIPTION_TYPE(4),
+    AUTOCOMPLETE(5),
     BAD_REQUEST(-1);
 
     int type;
@@ -21,6 +22,7 @@ public enum RequestType {
             case 2: return SUBSCRIPTION_PAYMENT;
             case 3: return ENTRANCE;
             case 4: return NEW_SUBSCRIPTION_TYPE;
+            case 5: return AUTOCOMPLETE;
             default: return BAD_REQUEST;
         }
     }

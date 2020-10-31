@@ -5,11 +5,15 @@ import com.buba.gymApp.backend.model.administrationComponents.User;
 import com.buba.gymApp.backend.utils.Converters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -28,38 +32,50 @@ public class UserDataAccessService implements UserDAO {
 
     @Override
     public User insertUser(User user) {
-        String sql = "INSERT INTO \"user\" (name, surname, email, fiscalcode, birthday, password, phonenumber, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        Object[] objects = new Object[]{user.getName(), user.getSurname(), user.getFiscalCode(), user.getBirthday(), user.getPassword(), user.getPhoneNumber(), user.isOwner()};
+        String sql = "INSERT INTO \"user\" (name, surname, email, fiscalcode, birthday, password, insurances, phonenumber, owner) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, objects, keyHolder);
-
-        user.setId(keyHolder.getKey().intValue());
-
-        return user;
+        Object[] objects = new Object[]{ user.getName(), user.getSurname(), user.getEmail(), user.getFiscalCode(), user.getBirthday(), user.getPassword(), Converters.createSqlArray(new ArrayList<Date>(), jdbcTemplate, "date"), user.getPhoneNumber(), user.isOwner()};
+        try {
+            jdbcTemplate.update(sql, objects);
+            return selectUserByEmail(user.getEmail());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public List<User> selectAllUsers() {
         String sql = "SELECT * FROM \"user\"";
-        return jdbcTemplate.query(sql, (resultSet, i) -> fromResultSetToUser(resultSet));
+        try {
+            return jdbcTemplate.query(sql, (resultSet, i) -> fromResultSetToUser(resultSet));
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public boolean deleteUserById(int id) {
 
         String sql = "DELETE FROM \"user\" WHERE id = ?";
-        return jdbcTemplate.update(sql, id) == 1;
+        try {
+            return jdbcTemplate.update(sql, id) == 1;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public boolean updateUserById(User user) {
+        String sql = "UPDATE user SET name = ?, surname = ?, email = ?, fiscalcode = ?, birthday = ?, password = ?,  phonenumber = ?, insurances = ?, owner = ? WHERE id = ?";
+        Object[] objects;
         try {
-            String sql = "UPDATE user SET name = ?, surname = ?, email = ?, fiscalcode = ?, birthday = ?, password = ?,  phonenumber = ?, insurances = ?, owner = ? WHERE id = ?";
-            Object[] objects = new Object[]{user.getName(), user.getSurname(), user.getEmail(), user.getFiscalCode(), user.getBirthday(), user.getPassword(), user.getPhoneNumber(), Converters.createSqlArray(user.getInsurances(), jdbcTemplate, "date"), user.isOwner(), user.getId()};
+            objects = new Object[]{user.getName(), user.getSurname(), user.getEmail(), user.getFiscalCode(), user.getBirthday(), user.getPassword(), user.getPhoneNumber(), Converters.createSqlArray(user.getInsurances(), jdbcTemplate, "date"), user.isOwner(), user.getId()};
             jdbcTemplate.update(sql, objects);
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             e.printStackTrace();
             return false;
         }
@@ -69,19 +85,42 @@ public class UserDataAccessService implements UserDAO {
     @Override
     public User selectUserById(int id) {
         String sql = "SELECT * FROM \"user\" WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, (resultSet, i) -> fromResultSetToUser(resultSet));
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{id}, (resultSet, i) -> fromResultSetToUser(resultSet));
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public User selectUserByEmail(String email) {
         String sql = "SELECT * FROM \"user\" WHERE email = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{email}, ((resultSet, i) -> fromResultSetToUser(resultSet)));
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{email}, ((resultSet, i) -> fromResultSetToUser(resultSet)));
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public User selectUserByFiscalCode(String fiscalCode) {
         String sql = "SELECT * FROM \"user\" WHERE fiscalcode = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{fiscalCode}, ((resultSet, i) -> fromResultSetToUser(resultSet)));
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{fiscalCode}, ((resultSet, i) -> fromResultSetToUser(resultSet)));
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<String[]> selectForAutocomplete(String name, String surname){
+        String sql = "SELECT name, surname, birthday, fiscalcode FROM \"user\" WHERE name LIKE ? AND surname LIKE ?";
+
+        return jdbcTemplate.query(sql, new Object[]{"%" + name + "%" , "%" + surname + "%"}, (resultSet, i) -> new String[]{resultSet.getString("name"), resultSet.getString("surname"), resultSet.getDate("birthday").toString(), resultSet.getString("fiscalcode")});
+
     }
 
     private User fromResultSetToUser(ResultSet resultSet) throws SQLException {
@@ -100,4 +139,6 @@ public class UserDataAccessService implements UserDAO {
 
         return new User(id, name, surname, fiscalCode, birthday, userTrainingSchedule, email, password, phoneNumber, userSubscriptions, insurances, owner);
     }
+
+
 }

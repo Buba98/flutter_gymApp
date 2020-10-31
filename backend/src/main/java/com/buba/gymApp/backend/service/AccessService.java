@@ -23,7 +23,7 @@ public class AccessService {
         this.sessionDAO = sessionDAO;
     }
 
-    public Session getUUIDForSignIn(String email, String password){
+    public Session getSessionForSignIn(String email, String password){
         User user = userDAO.selectUserByEmail(email);
 
         if (user == null)

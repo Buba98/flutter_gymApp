@@ -89,6 +89,17 @@ public class PaymentService {
 
         List<UserSubscription> userSubscriptionList = userSubscriptionDAO.getAllNotExpiredUserSubscriptionsByUserId(user.getId());
 
+        if (userSubscriptionList == null || userSubscriptionList.isEmpty()){
+            return 1;
+        }
 
+        for (UserSubscription userSubscription : userSubscriptionList){
+            if (subscriptionDAO.selectSubscriptionById(userSubscription.getSubscriptionId()).getMaxEntrances() > userSubscription.getEntranceDone()){
+                userSubscription.setEntranceDone(userSubscription.getEntranceDone() + 1);
+                userSubscriptionDAO.updateAll(userSubscription);
+                return 0;
+            }
+        }
+        return 1; //todo
     }
 }

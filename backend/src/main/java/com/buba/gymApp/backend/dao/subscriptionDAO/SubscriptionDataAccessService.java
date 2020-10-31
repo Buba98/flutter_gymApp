@@ -2,6 +2,7 @@ package com.buba.gymApp.backend.dao.subscriptionDAO;
 
 import com.buba.gymApp.backend.model.administrationComponents.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -25,29 +26,52 @@ public class SubscriptionDataAccessService implements  SubscriptionDAO{
 
         String sql = "INSERT INTO subscription (mouthduration, cost, maxentrance) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
+        try {
         jdbcTemplate.update(sql, subscription.getMouthDuration(), subscription.getCost(), subscription.getMaxEntrances(), keyHolder);
-
         subscription.setId(keyHolder.getKey().intValue());
-
         return subscription;
+    }
+        catch (
+    DataAccessException e){
+        e.printStackTrace();
+        return null;
+    }
     }
 
     @Override
     public Subscription selectSubscriptionByEverything(Subscription subscription) {
         String sql = "SELECT * FROM subscription WHERE mouthduration = ? AND cost = ? AND maxentrance = ?";
+        try {
         return jdbcTemplate.queryForObject(sql, new Object[]{subscription.getMouthDuration(), subscription.getCost(), subscription.getMaxEntrances()}, ((resultSet, i) -> fromResultSetToSubscription(resultSet)));
+    }
+        catch (DataAccessException e){
+        e.printStackTrace();
+        return null;
+    }
     }
 
     @Override
     public boolean deleteSubscriptionById(int id) {
         String sql = "DELETE FROM subscription WHERE id = ?";
+        try {
         return jdbcTemplate.update(sql, id) == 1;
+    }
+        catch (DataAccessException e){
+        e.printStackTrace();
+        return false;
+    }
     }
 
     @Override
     public Subscription selectSubscriptionById(int id) {
         String sql = "SELECT * FROM subscription WHERE id = ?";
+        try {
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, ((resultSet, i) -> fromResultSetToSubscription(resultSet)));
+    }
+        catch (DataAccessException e){
+        e.printStackTrace();
+        return null;
+    }
     }
 
     private Subscription fromResultSetToSubscription(ResultSet resultSet) throws SQLException {

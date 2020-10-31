@@ -12,4 +12,6 @@ public interface UserSubscriptionDAO {
     List<UserSubscription> getAllUserSubscriptionsByUserId(int userId);
 
     List<Integer> getAllUserSubscriptionsIdsByUserId(int userId);
+
+    boolean updateAll(UserSubscription userSubscription);
 }

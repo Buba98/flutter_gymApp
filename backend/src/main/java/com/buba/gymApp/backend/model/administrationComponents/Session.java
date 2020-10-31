@@ -1,6 +1,7 @@
 package com.buba.gymApp.backend.model.administrationComponents;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class Session {

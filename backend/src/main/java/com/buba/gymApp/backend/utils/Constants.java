@@ -1,11 +1,13 @@
 package com.buba.gymApp.backend.utils;
 
+import com.google.gson.Gson;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class Constants {
 
-    long oneMouth = 1000 * 60 * 60 * 24 * 30;
+    public static Gson gsonInstance = new Gson();
 
 }
