@@ -48,6 +48,21 @@ public class AccessService {
     }
 
     public boolean isOwner(UUID id){
-        return userDAO.selectUserById(sessionDAO.selectSessionByUUID(id).getUserId()).isOwner();
+        User user = userDAO.selectUserById(sessionDAO.selectSessionByUUID(id).getUserId());
+        if (user == null)
+            return false;
+        else
+            return user.isOwner();
+    }
+
+    public boolean isValidUUID(UUID id){
+        User user = userDAO.selectUserById(sessionDAO.selectSessionByUUID(id).getUserId());
+        return user != null;
+    }
+
+    public boolean isEmailValid(String email){
+        User user = userDAO.selectUserByEmail(email);
+
+        return user != null;
     }
 }
