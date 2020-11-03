@@ -65,4 +65,8 @@ public class AccessService {
 
         return user != null;
     }
+
+    public boolean deleteSession(UUID uuid){
+        return sessionDAO.deleteSessionByUUID(uuid);
+    }
 }

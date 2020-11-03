@@ -1,6 +1,6 @@
 # flutter_gym_app
 
-A new Flutter application.
+Gym app
 
 ## Getting Started
 

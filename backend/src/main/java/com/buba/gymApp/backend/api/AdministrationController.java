@@ -203,8 +203,8 @@ public class AdministrationController {
         int id;
 
         try {
-            id = Integer.parseInt(json.get("userId").getAsString());
-        } catch (NumberFormatException e) {
+            id = accessService.getUserIdByUUID(UUID.fromString(json.get("uuidAuthentication").getAsString()));
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return new Gson().toJson(new StatusResponse(400, "Bad request"));
         }

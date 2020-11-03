@@ -73,6 +73,17 @@ public class SessionDataAccessService implements SessionDAO {
     }
 
     @Override
+    public boolean deleteSessionByUUID(UUID uuid) {
+        String sql = "DELETE FROM session WHERE uuid = ?";
+        try {
+            return jdbcTemplate.update(sql, uuid) == 1;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
     public Session selectSessionByUUID(UUID id) {
         String sql = "SELECT * FROM session WHERE uuid = ?";
 

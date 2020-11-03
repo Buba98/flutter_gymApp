@@ -13,4 +13,6 @@ public interface SessionDAO {
     boolean deleteSessionByUserId(int userId);
 
     Session selectSessionByUUID(UUID id);
+
+    boolean deleteSessionByUUID(UUID uuid);
 }

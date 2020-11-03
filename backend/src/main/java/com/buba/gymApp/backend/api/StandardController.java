@@ -4,7 +4,6 @@ import com.buba.gymApp.backend.model.administrationComponents.Session;
 import com.buba.gymApp.backend.service.AccessService;
 import com.buba.gymApp.backend.service.EmailService;
 import com.buba.gymApp.backend.utils.Constants;
-import com.buba.gymApp.backend.utils.RequestType;
 import com.buba.gymApp.backend.utils.StatusResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -105,6 +104,21 @@ public class StandardController {
             return new Gson().toJson(new StatusResponse(400, "Bad request"));
         }
 
-        
+        UUID uuid;
+
+        try {
+            uuid = UUID.fromString(json.get("uuidAuthentication").getAsString());
+        } catch (IllegalArgumentException | NullPointerException e ) {
+            e.printStackTrace();
+            return new Gson().toJson(new StatusResponse(400, "Bad request"));
+        }
+
+        if (!accessService.isValidUUID(uuid))
+            return new Gson().toJson(new StatusResponse(400, "Bad request"));
+
+        if (accessService.deleteSession(uuid))
+            return new Gson().toJson(new StatusResponse(200, "Success"));
+        else
+            return new Gson().toJson(new StatusResponse(600, "Internal server error"));
     }
 }
