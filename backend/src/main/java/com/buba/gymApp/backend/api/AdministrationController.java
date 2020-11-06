@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.invoke.ConstantBootstraps;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @RequestMapping("api/v1/administration")
@@ -207,6 +205,10 @@ public class AdministrationController {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return new Gson().toJson(new StatusResponse(400, "Bad request"));
+        }
+
+        if (id == -1){
+            return new Gson().toJson(new StatusResponse(400, "User not found"));
         }
 
         switch (paymentService.addEntrance(id)){

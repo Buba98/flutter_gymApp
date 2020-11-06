@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gym_app/constants.dart';
+import 'package:flutter_gym_app/entity/currentSubscription.dart';
 import 'package:flutter_gym_app/handler/backendApi.dart';
 import 'package:flutter_gym_app/handler/helperFunctions.dart';
 import 'package:flutter_gym_app/screen/home.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 
 class Entrance extends StatefulWidget{
@@ -34,8 +36,6 @@ class _EntranceState extends State<Entrance> {
       uid = _uid;
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +148,7 @@ class _EntranceState extends State<Entrance> {
                         child: RaisedButton(
                           elevation: 5.0,
                           onPressed: () => Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => HomeScreen())),
+                              builder: (context) => _onAlertButtonPressed(context))),
                           padding: EdgeInsets.all(15.0),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0)
@@ -195,4 +195,132 @@ class _EntranceState extends State<Entrance> {
         break;
     }
   }
+
+
+
+  _onAlertButtonPressed(context) async {
+    
+    CurrentSubscription currentSubscription = await BackendApi.currentSubscription();
+
+    Alert(
+      context: context,
+      type: AlertType.info,
+      title: "Dettagli ultimo abbonamento",
+      content: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                "Giorni rimanenti :",
+                style: TextStyle(
+                    color: Colors.white,
+                    letterSpacing: 1.5,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'OpenSans'
+                ),
+              ),
+              Text(
+                currentSubscription.leftEntrances.toString(),
+                style: TextStyle(
+                    color: Colors.white,
+                    letterSpacing: 1.5,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'OpenSans'
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                "Giorni totali :",
+                style: TextStyle(
+                    color: Colors.white,
+                    letterSpacing: 1.5,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'OpenSans'
+                ),
+              ),
+              Text(
+                currentSubscription.totalEntrances.toString(),
+                style: TextStyle(
+                    color: Colors.white,
+                    letterSpacing: 1.5,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'OpenSans'
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                "Data iscrizione :",
+                style: TextStyle(
+                    color: Colors.white,
+                    letterSpacing: 1.5,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'OpenSans'
+                ),
+              ),
+              Text(
+                currentSubscription.startSubscription.toLocal().toString(),
+                style: TextStyle(
+                    color: Colors.white,
+                    letterSpacing: 1.5,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'OpenSans'
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                "Data scadenza :",
+                style: TextStyle(
+                    color: Colors.white,
+                    letterSpacing: 1.5,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'OpenSans'
+                ),
+              ),
+              Text(
+                currentSubscription.endSubscription.toLocal().toString(),
+                style: TextStyle(
+                    color: Colors.white,
+                    letterSpacing: 1.5,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'OpenSans'
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      buttons: [
+        DialogButton(
+          child: Text(
+            "OK",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: ()=> Navigator.pop(context),
+          width: 120,
+        )
+      ],
+    ).show();
+  }
+
 }

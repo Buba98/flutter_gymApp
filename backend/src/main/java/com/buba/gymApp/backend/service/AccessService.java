@@ -23,6 +23,15 @@ public class AccessService {
         this.sessionDAO = sessionDAO;
     }
 
+    public int getUserIdByUUID(UUID uuid){
+        Session session = sessionDAO.selectSessionByUUID(uuid);
+
+        if (session == null)
+            return -1;
+        else
+            return session.getUserId();
+    }
+
     public Session getSessionForSignIn(String email, String password){
         User user = userDAO.selectUserByEmail(email);
 

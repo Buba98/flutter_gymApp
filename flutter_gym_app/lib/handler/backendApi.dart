@@ -1,6 +1,9 @@
+import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_gym_app/constants.dart';
+import 'package:flutter_gym_app/entity/currentSubscription.dart';
 import 'package:flutter_gym_app/entity/user.dart';
 import 'package:http/http.dart' as http;
 
@@ -114,5 +117,27 @@ class BackendApi{
       }
     } else
       return -1;
+  }
+
+  static Future<CurrentSubscription> currentSubscription() async{
+    String uid = await HelperFunctions.getUUIDUser();
+    final http.Response response = await http.post(
+      serverUrl + 'api/v1/standard/currentSubscription',
+      body: jsonEncode(
+        <String, String>{
+          "uuid" :  uid
+        }
+      )
+    );
+
+    if(response.statusCode == 200){
+      dynamic json = jsonDecode(response.body);
+
+      if (json['status'] == 200){
+        json = json['currentSubscription'];
+        return CurrentSubscription.fromJson(json);  
+      }
+    }
+    return null;
   }
 }

@@ -18,8 +18,6 @@ final String gymLogo = "assets/logo.png";
 final Color backgroundColor = Color.fromRGBO(18, 05, 16, 1.0); //background
 final Color foregroundColor = Color.fromRGBO(225, 127, 80, 1.0); //foreground
 
-
-
 final kLabelStyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.bold,
