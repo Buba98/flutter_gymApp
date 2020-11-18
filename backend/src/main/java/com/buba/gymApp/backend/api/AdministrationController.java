@@ -86,12 +86,24 @@ public class AdministrationController {
 
     }
 
-    private String newSubscriptionType(JsonObject json){
-        int mouthDuration = json.get("mouthDuration").getAsInt();
-        float cost = json.get("cost").getAsFloat();
-        int maxEntrances  = json.get("maxEntrances").getAsInt();
+    private String newSubscriptionType(JsonObject json) {
 
-        switch (paymentService.addSubscription(maxEntrances, cost, mouthDuration)){
+        int mouthDuration;
+        float cost;
+        int maxEntrances;
+        String name;
+
+        try {
+            mouthDuration = Integer.parseInt(json.get("mouthDuration").getAsString());
+            cost = Float.parseFloat(json.get("cost").getAsString());
+            maxEntrances = Integer.parseInt(json.get("maxEntrances").getAsString());
+            name = json.get("name").getAsString();
+        } catch (IllegalArgumentException | NullPointerException e) {
+            return new Gson().toJson(new StatusResponse(400, "Bad request"));
+        }
+
+
+        switch (paymentService.addSubscription(maxEntrances, cost, mouthDuration, name)) {
             case 0:
                 return new Gson().toJson(new StatusResponse(400, "Subscription already exists"));
             case 1:
@@ -215,7 +227,11 @@ public class AdministrationController {
             case 0:
                 return new Gson().toJson(new StatusResponse(200, "OK"));
             case 1:
+                return new Gson().toJson(new StatusResponse(400, "No valid user subscription found"));
+            case 2:
                 return new Gson().toJson(new StatusResponse(400, "No valid subscription found"));
+            case 3:
+                return new Gson().toJson(new StatusResponse(400, "Entrance of subscription are over the limit"));
             default:
                 return new Gson().toJson(new StatusResponse(600, "Internal server error"));
         }

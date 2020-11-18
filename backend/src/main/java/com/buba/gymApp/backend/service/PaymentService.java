@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -38,12 +40,19 @@ public class PaymentService {
                 return 2;
         }
 
-        user.getInsurances().add(new Date());
+        Date[] insurances = user.getInsurances();
 
-        if (userDAO.updateUserById(user))
-            return 1;
-        else
+        Date[] newInsurances = new Date[insurances.length + 1];
+
+        insurances[0] = new Date();
+        System.arraycopy(insurances, 0, newInsurances, 1, insurances.length);
+
+        user.setInsurances(newInsurances);
+
+        if (userDAO.updateUserById(user) == null)
             return -1;
+        else
+            return 1;
     }
 
     public int addUserSubscription(int userId, int subscriptionId) {
@@ -56,12 +65,13 @@ public class PaymentService {
             return 1;
         }
 
-        if (userSubscriptionDAO.selectAllNotExpiredUserSubscriptionsByUserId(user.getId()).size() != 0)
+        if (userSubscriptionDAO.selectNotExpiredUserSubscriptionsByUserId(user.getId()) != null)
             return 3;
 
-        UserSubscription userSubscription = new UserSubscription(null, subscription.getId(), 0, user.getId(), new Date(), new Date(new Date().getTime() + TimeUnit.DAYS.toMillis(subscription.getMouthDuration() * 31)));
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, subscription.getMouthDuration());
 
-        userSubscription = userSubscriptionDAO.insertUserSubscription(userSubscription);
+        UserSubscription userSubscription = userSubscriptionDAO.insertUserSubscription(subscriptionId, 0, userId, cal.getTime());
 
         if (userSubscription == null)
             return -1;
@@ -69,13 +79,12 @@ public class PaymentService {
             return 2;
     }
 
-    public int addSubscription(int maxEntrance, float cost, int mouthDuration){
-        Subscription subscription = new Subscription(null, mouthDuration, cost, maxEntrance);
+    public int addSubscription(int maxEntrance, float cost, int mouthDuration, String name){
 
-        if (subscriptionDAO.selectSubscriptionByEverything(subscription) != null)
+        if (subscriptionDAO.selectSubscriptionByName(name) != null)
             return 0;
 
-        if (subscriptionDAO.insertSubscription(subscription) == null)
+        if (subscriptionDAO.insertSubscription(mouthDuration, cost, maxEntrance, name) == null)
             return -1;
         else
             return 1;
@@ -87,19 +96,23 @@ public class PaymentService {
         if (user == null)
             return 0;
 
-        List<UserSubscription> userSubscriptionList = userSubscriptionDAO.selectAllNotExpiredUserSubscriptionsByUserId(user.getId());
+        UserSubscription userSubscription = userSubscriptionDAO.selectNotExpiredUserSubscriptionsByUserId(user.getId());
 
-        if (userSubscriptionList == null || userSubscriptionList.isEmpty()){
+        if (userSubscription == null){
             return 1;
         }
 
-        for (UserSubscription userSubscription : userSubscriptionList){
-            if (subscriptionDAO.selectSubscriptionById(userSubscription.getSubscriptionId()).getMaxEntrances() > userSubscription.getEntranceDone()){
-                userSubscription.setEntranceDone(userSubscription.getEntranceDone() + 1);
-                userSubscriptionDAO.updateUserSubscription(userSubscription);
-                return 0;
-            }
+        Subscription subscription = subscriptionDAO.selectSubscriptionById(userSubscription.getSubscriptionId());
+
+        if (subscription == null)
+            return 2;
+
+        if (userSubscription.getEntranceDone() < subscription.getMaxEntrances()) {
+            userSubscription.setEntranceDone(userSubscription.getEntranceDone() + 1);
+            userSubscriptionDAO.updateUserSubscription(userSubscription);
+            return 0;
         }
-        return 1; //todo
+        else
+            return 3;
     }
 }

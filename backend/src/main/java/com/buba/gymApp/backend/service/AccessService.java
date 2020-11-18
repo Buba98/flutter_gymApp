@@ -44,14 +44,13 @@ public class AccessService {
     }
 
     public int signUp(String fiscalCode, String name, String surname, Date birthday, String email, String password, String phoneNumber, boolean owner){
-        User user = new User(null, name, surname, fiscalCode, birthday, email, password, phoneNumber, null, owner);
 
         if (userDAO.selectUserByEmail(email) != null)
             return 1;
         if (userDAO.selectUserByFiscalCode(fiscalCode) != null)
             return 0;
 
-        if (userDAO.insertUser(user).getId() == null)
+        if (userDAO.insertUser(name, surname, email, fiscalCode, birthday, password, null, phoneNumber, owner).getId() == null)
             return -1;
         else return 2;
     }

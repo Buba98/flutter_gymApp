@@ -34,19 +34,22 @@ public class UserSubscriptionDataAccessService implements UserSubscriptionDAO {
      * @return the userSubscription if it is inserted into DB, null otherwise
      */
     @Override
-    public UserSubscription insertUserSubscription(int id, int subscriptionId, int entranceDone, int userId, Date endDate) {
-        String sql = "INSERT INTO \"userSubscription\" (id, \"userId\", \"subscriptionId\", \"entranceDone\", \"endDate\") VALUES (?, ?, ?, ?, ?)";
+    public UserSubscription insertUserSubscription(int subscriptionId, int entranceDone, int userId, Date endDate) {
+
+        if (selectNotExpiredUserSubscriptionsByUserId(userId) != null)
+            return null;
+
+        String sql = "INSERT INTO \"userSubscription\" (\"userId\", \"subscriptionId\", \"entranceDone\", \"endDate\") VALUES (?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         try {
             jdbcTemplate.update(connection -> {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-                preparedStatement.setInt(1, id);
-                preparedStatement.setInt(2, userId);
-                preparedStatement.setInt(3, subscriptionId);
-                preparedStatement.setInt(4, entranceDone);
-                preparedStatement.setDate(5, new java.sql.Date(endDate.getTime()));
+                preparedStatement.setInt(1, userId);
+                preparedStatement.setInt(2, subscriptionId);
+                preparedStatement.setInt(3, entranceDone);
+                preparedStatement.setDate(4, new java.sql.Date(endDate.getTime()));
 
                 return preparedStatement;
             }, keyHolder);

@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface UserSubscriptionDAO {
-    UserSubscription insertUserSubscription(int id, int subscriptionId, int entranceDone, int userId,
+    UserSubscription insertUserSubscription(int subscriptionId, int entranceDone, int userId,
                                             Date endDate);
 
     UserSubscription selectNotExpiredUserSubscriptionsByUserId(int userId);
