@@ -32,6 +32,19 @@ public class AdministrationController {
         this.toolService = toolService;
     }
 
+    /**
+     * All the administration operations have to pass through initial checks
+     * @param jsonString the json as string provided by an user
+     *                   FORMAT:
+     *                   {
+     *                      uuidAuthentication: String uuid,
+     *                      requestType: String number,
+     *                      request: {
+     *                          ...insert the request...
+     *                      }
+     *                   }
+     * @return a new json as string
+     */
     @PostMapping
     public String initialChecks(@RequestBody String jsonString) {
 
@@ -67,13 +80,15 @@ public class AdministrationController {
             return new Gson().toJson(new StatusResponse(400, "Bad request"));
         }
 
+        json = json.getAsJsonObject("request");
+
         switch (requestType) {
             case SIGN_UP:
                 return signUp(json);
             case INSURANCE_PAYMENT:
                 return insurancePayment(json);
             case SUBSCRIPTION_PAYMENT:
-                return subscriptionPayment(json);
+                return userSubscriptionPayment(json);
             case ENTRANCE:
                 return entranceRegistration(json);
             case NEW_SUBSCRIPTION_TYPE:
@@ -86,6 +101,18 @@ public class AdministrationController {
 
     }
 
+    /**
+     * Add a new type of subscription in
+     * @param json the json of the request
+     *             FORMAT:
+     *             {
+     *                  "monthDuration" : "1",
+     *                  "cost" : "40.0",
+     *                  "maxEntrances" : "1",
+     *                  "name" : "annual subscription open"
+     *             }
+     * @return the json response to client
+     */
     private String newSubscriptionType(JsonObject json) {
 
         int mouthDuration;
@@ -114,6 +141,15 @@ public class AdministrationController {
         }
     }
 
+    /**
+     * Payment of the insurance by the user
+     * @param json the json of the request
+     *             FORMAT:
+     *             {
+     *                  "userId" : "10"
+     *             }
+     * @return the json response to client
+     */
     private String insurancePayment(JsonObject json) {
 
         int id;
@@ -137,6 +173,22 @@ public class AdministrationController {
         }
     }
 
+    /**
+     * SignUp a new user
+     * @param json the json request
+     *             FORMAT:
+     *             {
+     *                  "name" : "Vincenzo",
+     *                  "surname" : "Greco",
+     *                  "birthday" : "1998-08-27",
+     *                  "email" : "grecovincenzo98@gmail.com",
+     *                  "password" : "nontelado",
+     *                  "phoneNumber" : "3923106688",
+     *                  "owner" : true,
+     *                  "fiscalCode" : "GRCVCN98M27L109S"
+     *             }
+     * @return a json response to client
+     */
     private String signUp(JsonObject json) {
 
         String fiscalCode;
@@ -183,7 +235,17 @@ public class AdministrationController {
         return new Gson().toJson(response);
     }
 
-    private String subscriptionPayment(JsonObject json) {
+    /**
+     * Payment of the subscription by user
+     * @param json the json of the request
+     *             FORMAT:
+     *             {
+     *                  "userId" : "10",
+     *                  "subscriptionId" : "100"
+     *             }
+     * @return the response to the client
+     */
+    private String userSubscriptionPayment(JsonObject json) {
         int id;
         int subscriptionId;
 
@@ -209,11 +271,20 @@ public class AdministrationController {
         }
     }
 
+    /**
+     * Register a new entrance of an user if possible
+     * @param json the json request
+     *             FORMAT:
+     *             {
+     *                  "uuidUser" : "xxxx-xx-xx-xxxx"
+     *             }
+     * @return the json response to the client
+     */
     private String entranceRegistration(JsonObject json){
-        Integer id;
+        int id;
 
         try {
-            id = accessService.getUserIdByUUID(UUID.fromString(json.get("uuidAuthentication").getAsString()));
+            id = accessService.getUserIdByUUID(UUID.fromString(json.get("uuidUser").getAsString()));
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return new Gson().toJson(new StatusResponse(400, "Bad request"));
@@ -237,6 +308,20 @@ public class AdministrationController {
         }
     }
 
+    /**
+     * Autocomplete for various applications
+     * @param json the json request:
+     *             FORMAT:
+     *             {
+     *                  "context" : "user",
+     *                  "pattern" : {
+     *                      "name" : "Vin",
+     *                      "surname" : "Gre",
+     *                      "fiscalCode" : "GRC"
+     *                  }
+     *             }
+     * @return the response to client
+     */
     private String autocomplete(JsonObject json) {
         try {
             return Constants.gsonInstance.toJson(new StatusResponse(200, toolService.autocomplete(json.get("context").getAsString(), json.get("pattern").getAsJsonObject()).toString()));

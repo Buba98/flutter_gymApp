@@ -11,19 +11,7 @@ import java.util.List;
 public class Converters {
 
     public static java.util.Date fromStringToUtil(String stringDate) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyy-MM-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return formatter.parse(stringDate);
     }
-
-    public static java.sql.Array createSqlArray(Date[] list, JdbcTemplate jdbcTemplate, String type){
-        java.sql.Array intArray = null;
-        try {
-            intArray = jdbcTemplate.getDataSource().getConnection().createArrayOf(type, list.toArray());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return intArray;
-    }
-
 }
