@@ -1,29 +1,31 @@
 package com.buba.gymApp.backend.model.administrationComponents;
 
+import org.springframework.jdbc.core.RowMapper;
+
 import java.util.Date;
 
 public class UserSubscription {
-    private Integer id;
+    private int id;
     private int subscriptionId;
     private int entranceDone;
     private int userId;
-    private Date startDate;
     private Date endDate;
 
-    public UserSubscription(Integer id, int subscriptionId, int entranceDone, int userId, Date startDate, Date endDate) {
+    public UserSubscription(int id, int subscriptionId, int entranceDone, int userId, Date endDate) {
         this.id = id;
         this.subscriptionId = subscriptionId;
         this.entranceDone = entranceDone;
         this.userId = userId;
-        this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public Integer getId() {
+    private UserSubscription(){}
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -51,19 +53,24 @@ public class UserSubscription {
         this.userId = userId;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
     public Date getEndDate() {
         return endDate;
     }
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public static RowMapper<UserSubscription> mapper(){
+        return (resultSet, i) -> {
+            UserSubscription userSubscription = new UserSubscription();
+            userSubscription.endDate = new Date(resultSet.getDate("endDate").getTime());
+            userSubscription.entranceDone = resultSet.getInt("entranceDone");
+            userSubscription.id = resultSet.getInt("id");
+            userSubscription.subscriptionId = resultSet.getInt("subscriptionId");
+            userSubscription.userId = resultSet.getInt("userId");
+
+            return userSubscription;
+        };
     }
 }

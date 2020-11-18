@@ -1,5 +1,6 @@
 package com.buba.gymApp.backend.dao;
 
+import com.buba.gymApp.backend.dao.interfaces.TrainingScheduleDAO;
 import com.buba.gymApp.backend.model.treaningComponents.TrainingSchedule;
 import com.buba.gymApp.backend.utils.PostgreSQLInt4Array;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
+import java.util.Objects;
 
-public class TrainingScheduleDataAccessService {
+public class TrainingScheduleDataAccessService implements TrainingScheduleDAO {
     JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -18,7 +20,15 @@ public class TrainingScheduleDataAccessService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public TrainingSchedule insertTraining(String name, String description, int[] trainingsIds){
+    /**
+     * Insert a training schedule into DB
+     * @param name name
+     * @param description description
+     * @param trainingsIds ids of the trainings of the training schedule
+     * @return the new trainingSchedule if it has been created, false otherwise
+     */
+    @Override
+    public TrainingSchedule insertTrainingSchedule(String name, String description, int[] trainingsIds){
         String sql = "INSERT INTO \"trainingSchedule\" (name, description, \"trainingsIds\") VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -32,14 +42,20 @@ public class TrainingScheduleDataAccessService {
                 preparedStatement.setArray(3, new PostgreSQLInt4Array(trainingsIds));
                 return preparedStatement;
             }, keyHolder);
-        } catch (DataAccessException e){
+            return new TrainingSchedule(Objects.requireNonNull(keyHolder.getKey()).intValue(), name, trainingsIds, description);
+        } catch (DataAccessException | NullPointerException e){
             e.printStackTrace();
             return null;
         }
-        return new TrainingSchedule(keyHolder.getKey().intValue(), name, trainingsIds, description);
     }
 
-    public TrainingSchedule selectTrainingById(int id){
+    /**
+     * Select a trainingSchedule by id
+     * @param id id
+     * @return the training schedule if it has been found, null otherwise
+     */
+    @Override
+    public TrainingSchedule selectTrainingScheduleById(int id){
         String sql = "SELECT * FROM \"trainingSchedule\" WHERE id = ?";
 
         try {
@@ -50,7 +66,13 @@ public class TrainingScheduleDataAccessService {
         }
     }
 
-    public TrainingSchedule selectTrainingByName(String name){
+    /**
+     * Select training schedule by name
+     * @param name name
+     * @return the training schedule if it has been found, null otherwise
+     */
+    @Override
+    public TrainingSchedule selectTrainingScheduleByName(String name){
         String sql = "SELECT * FROM \"trainingSchedule\" WHERE name = ?";
 
         try {
@@ -61,7 +83,13 @@ public class TrainingScheduleDataAccessService {
         }
     }
 
-    public TrainingSchedule updateTraining(TrainingSchedule trainingSchedule){
+    /**
+     * Update a training schedule
+     * @param trainingSchedule training schedule updated
+     * @return the training schedule updated if it has been updated, null otherwise
+     */
+    @Override
+    public TrainingSchedule updateTrainingSchedule(TrainingSchedule trainingSchedule){
         String sql = "UPDATE \"trainingSchedule\" SET name = ?,  description= ?, \"trainingsIds\" = ? WHERE id = ?";
 
         try{

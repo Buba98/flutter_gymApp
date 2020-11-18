@@ -2,16 +2,16 @@ package com.buba.gymApp.backend.dao.interfaces;
 
 import com.buba.gymApp.backend.model.administrationComponents.UserSubscription;
 
+import java.util.Date;
 import java.util.List;
 
 public interface UserSubscriptionDAO {
-    UserSubscription insertUserSubscription(UserSubscription userSubscription);
+    UserSubscription insertUserSubscription(int id, int subscriptionId, int entranceDone, int userId,
+                                            Date endDate);
 
-    List<UserSubscription> getAllNotExpiredUserSubscriptionsByUserId(int userId);
+    UserSubscription selectNotExpiredUserSubscriptionsByUserId(int userId);
 
-    List<UserSubscription> getAllUserSubscriptionsByUserId(int userId);
+    List<UserSubscription> selectAllUserSubscriptionsByUserId(int userId);
 
-    List<Integer> getAllUserSubscriptionsIdsByUserId(int userId);
-
-    boolean updateAll(UserSubscription userSubscription);
+    UserSubscription updateUserSubscription(UserSubscription userSubscription);
 }

@@ -1,5 +1,6 @@
 package com.buba.gymApp.backend.dao;
 
+import com.buba.gymApp.backend.dao.interfaces.TrainingDAO;
 import com.buba.gymApp.backend.model.treaningComponents.Training;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -9,9 +10,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.Objects;
 
 @Repository("postgresTraining")
-public class TrainingDataAccessService {
+public class TrainingDataAccessService implements TrainingDAO {
 
     JdbcTemplate jdbcTemplate;
 
@@ -20,6 +22,14 @@ public class TrainingDataAccessService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     * Insert training into DB
+     * @param name name of the training
+     * @param description description of the training
+     * @param exerciseInTrainingIds the ids of the exercisesInTraining
+     * @return the new training if it has been created, null otherwise
+     */
+    @Override
     public Training insertTraining(String name, String description, int[][] exerciseInTrainingIds){
         String sql = "INSERT INTO training (name, description, \"exercisesInTrainingIds\") VALUES (?, ?, ?)";
 
@@ -34,13 +44,19 @@ public class TrainingDataAccessService {
                 preparedStatement.setArray(3, connection.createArrayOf("integer", exerciseInTrainingIds));
                 return preparedStatement;
             }, keyHolder);
-        } catch (DataAccessException e){
+            return new Training(Objects.requireNonNull(keyHolder.getKey()).intValue(), name, description, exerciseInTrainingIds);
+        } catch (DataAccessException | NullPointerException e){
             e.printStackTrace();
             return null;
         }
-        return new Training(keyHolder.getKey().intValue(), name, description, exerciseInTrainingIds);
     }
 
+    /**
+     * Select a training from DB by id
+     * @param id id
+     * @return the training if it has been found, null otherwise
+     */
+    @Override
     public Training selectTrainingById(int id){
         String sql = "SELECT * FROM training WHERE id = ?";
 
@@ -52,6 +68,12 @@ public class TrainingDataAccessService {
         }
     }
 
+    /**
+     * Select a training from DB by name
+     * @param name name
+     * @return the training if it has been found, null otherwise
+     */
+    @Override
     public Training selectTrainingByName(String name){
         String sql = "SELECT * FROM training WHERE name = ?";
 
@@ -63,6 +85,12 @@ public class TrainingDataAccessService {
         }
     }
 
+    /**
+     * Update a training into DB
+     * @param training the training updated
+     * @return the training updated if it has been updated, null otherwise
+     */
+    @Override
     public Training updateTraining(Training training){
         String sql = "UPDATE training SET name = ?,  description= ?, \"exercisesInTrainingIds\" = ? WHERE id = ?";
 

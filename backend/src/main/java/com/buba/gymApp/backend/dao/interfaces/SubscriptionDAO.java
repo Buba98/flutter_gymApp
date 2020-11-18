@@ -5,9 +5,9 @@ import com.buba.gymApp.backend.model.administrationComponents.Subscription;
 public interface SubscriptionDAO {
     boolean deleteSubscriptionById(int id);
 
-    Subscription selectSubscriptionByEverything(Subscription subscription);
+    Subscription selectSubscriptionByName(String name);
 
-    Subscription insertSubscription(Subscription subscription);
+    Subscription insertSubscription(int mouthDuration, float cost, int maxEntrances, String name);
 
     Subscription selectSubscriptionById(int id);
 }

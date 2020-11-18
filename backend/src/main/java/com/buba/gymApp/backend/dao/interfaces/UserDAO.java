@@ -3,17 +3,18 @@ package com.buba.gymApp.backend.dao.interfaces;
 import com.buba.gymApp.backend.model.administrationComponents.User;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 public interface UserDAO {
 
-    User insertUser(User user);
+    User insertUser(String name, String surname, String email, String fiscalCode, Date birthday, String password, Date[] insurances, String phone, boolean owner);
 
     List<User> selectAllUsers();
 
     boolean deleteUserById(int id);
 
-    boolean updateUserById(User user);
+    User updateUserById(User user);
 
     User selectUserById(int id);
 

@@ -57,7 +57,7 @@ public class StandardController {
         if (session == null)
             response = new StatusResponse(401, "Email and/or password are not correct");
         else
-            response = new StatusResponse(200, session.getId().toString());
+            response = new StatusResponse(200, session.getUuid().toString());
 
         return Constants.gsonInstance.toJson(response);
     }

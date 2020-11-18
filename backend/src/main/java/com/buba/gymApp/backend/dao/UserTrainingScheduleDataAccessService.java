@@ -1,5 +1,6 @@
 package com.buba.gymApp.backend.dao;
 
+import com.buba.gymApp.backend.dao.interfaces.UserTrainingScheduleDAO;
 import com.buba.gymApp.backend.model.treaningComponents.UserTrainingSchedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -11,9 +12,10 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Repository("postgresUserTrainingSchedule")
-public class UserTrainingScheduleDataAccessService {
+public class UserTrainingScheduleDataAccessService implements UserTrainingScheduleDAO {
     JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -31,6 +33,7 @@ public class UserTrainingScheduleDataAccessService {
      * @param comment a comment for the user
      * @return the userTrainingSchedule if it was been created successfully, false otherwise
      */
+    @Override
     public UserTrainingSchedule insertUserTrainingSchedule(int userId, int trainingScheduleId, Date startDate, Date endDate, String comment){
         String sql = "INSERT INTO \"userTrainingSchedule\" (\"userId\", \"trainingScheduleId\", \"startDate\", \"endDate\", \"comment\") VALUES (?, ?, ?, ?, ?)";
 
@@ -47,11 +50,11 @@ public class UserTrainingScheduleDataAccessService {
 
                 return preparedStatement;
             }, keyHolder);
-        } catch (DataAccessException e){
+            return new UserTrainingSchedule(Objects.requireNonNull(keyHolder.getKey()).intValue(), startDate, endDate, trainingScheduleId, comment, userId);
+        } catch (DataAccessException | NullPointerException e){
             e.printStackTrace();
             return null;
         }
-        return new UserTrainingSchedule(keyHolder.getKey().intValue(), startDate, endDate, trainingScheduleId, comment, userId);
     }
 
     /**
@@ -59,6 +62,7 @@ public class UserTrainingScheduleDataAccessService {
      * @param id id
      * @return if exist the UserTrainingSchedule, otherwise null
      */
+    @Override
     public UserTrainingSchedule selectUserTrainingScheduleById(int id){
         String sql = "SELECT * FROM \"userTrainingSchedule\" WHERE id = ?";
 
@@ -75,6 +79,7 @@ public class UserTrainingScheduleDataAccessService {
      * @param userId user id
      * @return a list of all the userTrainingSchedule selected
      */
+    @Override
     public List<UserTrainingSchedule> selectUserTrainingScheduleByUserId(int userId){
         String sql = "SELECT * FROM \"userTrainingSchedule\" WHERE \"userId\" = ?";
 
@@ -91,6 +96,7 @@ public class UserTrainingScheduleDataAccessService {
      * @param userId user id
      * @return a list of all the userTrainingSchedule selected
      */
+    @Override
     public List<UserTrainingSchedule> selectNotExpiredUserTrainingScheduleByUserId(int userId){
         String sql = "SELECT * FROM \"userTrainingSchedule\" WHERE \"userId\" = ? AND \"endDate\" > now()";
 
@@ -107,6 +113,7 @@ public class UserTrainingScheduleDataAccessService {
      * @param userTrainingSchedule userTrainingSchedule
      * @return the userTrainingSchedule if it was been updated successfully, false otherwise
      */
+    @Override
     public UserTrainingSchedule updateUserTrainingSchedule(UserTrainingSchedule userTrainingSchedule){
         String sql = "UPDATE \"userTrainingSchedule\" SET \"userId\" = ?, \"trainingScheduleId\" = ?, \"startDate\" = ?, \"endDate\" = ?, comment = ? WHERE id = ?";
 

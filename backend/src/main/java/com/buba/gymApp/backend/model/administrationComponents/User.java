@@ -1,9 +1,8 @@
 package com.buba.gymApp.backend.model.administrationComponents;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.jdbc.core.RowMapper;
 
 import java.util.Date;
-import java.util.List;
 
 public class User {
 
@@ -23,20 +22,12 @@ public class User {
 
     private String phoneNumber;
 
-    private List<Date> insurances;
+    private Date[] insurances;
 
     private boolean owner;
 
-    public User(@JsonProperty("id") Integer id,
-                @JsonProperty("name") String name,
-                @JsonProperty("surname") String surname,
-                @JsonProperty("fiscalCode") String fiscalCode,
-                @JsonProperty("birthday") Date birthday,
-                @JsonProperty("email") String email,
-                @JsonProperty("password") String password,
-                @JsonProperty("phoneNumber") String phoneNumber,
-                @JsonProperty("insurances") List<Date> insurances,
-                @JsonProperty("owner") boolean owner) {
+    public User(Integer id, String name, String surname, String fiscalCode, Date birthday, String email,
+                String password, String phoneNumber, Date[] insurances, boolean owner) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -48,6 +39,8 @@ public class User {
         this.insurances = insurances;
         this.owner = owner;
     }
+
+    private User(){}
 
     public boolean isOwner() {
         return owner;
@@ -121,11 +114,29 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<Date> getInsurances() {
+    public Date[] getInsurances() {
         return insurances;
     }
 
-    public void setInsurances(List<Date> insurances) {
+    public void setInsurances(Date[] insurances) {
         this.insurances = insurances;
+    }
+
+    public static RowMapper<User> mapper(){
+        return (resultSet, i) -> {
+            User user = new User();
+            user.birthday = new Date(resultSet.getDate("birthday").getTime());
+            user.email = resultSet.getString("email");
+            user.fiscalCode = resultSet.getString("fiscalCode");
+            user.id = resultSet.getInt("id");
+            user.insurances = (Date[]) resultSet.getArray("insurances").getArray();
+            user.name = resultSet.getString("name");
+            user.owner = resultSet.getBoolean("owner");
+            user.password = resultSet.getString("password");
+            user.phoneNumber = resultSet.getString("phone");
+            user.surname = resultSet.getString("surname");
+
+            return user;
+        };
     }
 }

@@ -1,5 +1,6 @@
 package com.buba.gymApp.backend.dao;
 
+import com.buba.gymApp.backend.dao.interfaces.ExerciseInTrainingDAO;
 import com.buba.gymApp.backend.model.treaningComponents.ExerciseInTraining;
 import com.buba.gymApp.backend.utils.PostgreSQLInt4Array;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 
 @Repository("postgresExerciseInTraining")
-public class ExerciseInTrainingDataAccessService {
+public class ExerciseInTrainingDataAccessService implements ExerciseInTrainingDAO {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -27,6 +28,7 @@ public class ExerciseInTrainingDataAccessService {
      * @param description the description of the exercise
      * @return if the exerciseInTraining has been created successfully returns the exercise otherwise null
      */
+    @Override
     public ExerciseInTraining insertExerciseInTraining(int exerciseId, int[] setIds, String description){
         String sql = "INSERT INTO \"exerciseInTraining\" (\"exerciseId\", \"setsIds\", \"description\") VALUES (?, ?, ?)";
 
@@ -53,6 +55,7 @@ public class ExerciseInTrainingDataAccessService {
      * @param id id of exercise
      * @return if exist the exercise, otherwise null
      */
+    @Override
     public ExerciseInTraining selectExerciseInTrainingById(int id){
         String sql = "SELECT * FROM \"exerciseInTraining\" WHERE id = ?";
 
@@ -69,6 +72,7 @@ public class ExerciseInTrainingDataAccessService {
      * @param exerciseInTraining is the exerciseInTraining to updated. The id has to be the same
      * @return the updated exerciseInTraining if the update has been completed successfully, null otherwise
      */
+    @Override
     public ExerciseInTraining updateExerciseInTraining(ExerciseInTraining exerciseInTraining){
         String sql = "UPDATE \"exerciseInTraining\" SET \"exerciseId\" = ?, \"setsIds\" = ?, description = ? WHERE id = ?";
         try{

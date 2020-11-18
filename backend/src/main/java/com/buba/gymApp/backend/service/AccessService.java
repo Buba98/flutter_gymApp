@@ -78,14 +78,4 @@ public class AccessService {
     public boolean deleteSession(UUID uuid){
         return sessionDAO.deleteSessionByUUID(uuid);
     }
-
-    public Integer getUserIdByUUID(UUID uuid){
-        Session session = sessionDAO.selectSessionByUUID(uuid);
-
-        if (session == null)
-            return null;
-        
-        return session.getUserId();
-
-    }
 }

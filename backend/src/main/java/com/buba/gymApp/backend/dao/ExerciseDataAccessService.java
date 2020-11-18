@@ -30,6 +30,7 @@ public class ExerciseDataAccessService implements ExerciseDAO {
      * @param exerciseType the type of exercise
      * @return if the exercise has been created successfully returns the exercise otherwise null
      */
+    @Override
     public Exercise insertExercise(String name, String urlVideo, String imageOrGif, ExerciseType exerciseType){
         String sql = "INSERT INTO exercise (\"urlVideo\", \"imageOrGif\", \"typeOfExercise\", \"name\") VALUES (?, ?, ?, ?)";
 
@@ -57,6 +58,7 @@ public class ExerciseDataAccessService implements ExerciseDAO {
      * @param id id of exercise
      * @return if exist the exercise, otherwise null
      */
+    @Override
     public Exercise selectExerciseById(int id){
         String sql = "SELECT * FROM exercise WHERE id = ?";
 
@@ -73,6 +75,7 @@ public class ExerciseDataAccessService implements ExerciseDAO {
      * @param name name of exercise
      * @return if exist the exercise, otherwise null
      */
+    @Override
     public Exercise selectExerciseByName(String name){
         String sql = "SELECT * FROM exercise WHERE name = ?";
 
@@ -89,6 +92,7 @@ public class ExerciseDataAccessService implements ExerciseDAO {
      * @param exercise is the exercise to updated. The id has to be the same
      * @return the updated exercise if the update has been completed successfully, null otherwise
      */
+    @Override
     public Exercise updateExercise(Exercise exercise){
         String sql = "UPDATE exercise SET name = ?, \"urlVideo\" = ?, \"imageOrGif\" = ?, \"typeOfExercise\" = ? WHERE id = ?";
         try{

@@ -56,7 +56,7 @@ public class PaymentService {
             return 1;
         }
 
-        if (userSubscriptionDAO.getAllNotExpiredUserSubscriptionsByUserId(user.getId()).size() != 0)
+        if (userSubscriptionDAO.selectAllNotExpiredUserSubscriptionsByUserId(user.getId()).size() != 0)
             return 3;
 
         UserSubscription userSubscription = new UserSubscription(null, subscription.getId(), 0, user.getId(), new Date(), new Date(new Date().getTime() + TimeUnit.DAYS.toMillis(subscription.getMouthDuration() * 31)));
@@ -87,7 +87,7 @@ public class PaymentService {
         if (user == null)
             return 0;
 
-        List<UserSubscription> userSubscriptionList = userSubscriptionDAO.getAllNotExpiredUserSubscriptionsByUserId(user.getId());
+        List<UserSubscription> userSubscriptionList = userSubscriptionDAO.selectAllNotExpiredUserSubscriptionsByUserId(user.getId());
 
         if (userSubscriptionList == null || userSubscriptionList.isEmpty()){
             return 1;
@@ -96,7 +96,7 @@ public class PaymentService {
         for (UserSubscription userSubscription : userSubscriptionList){
             if (subscriptionDAO.selectSubscriptionById(userSubscription.getSubscriptionId()).getMaxEntrances() > userSubscription.getEntranceDone()){
                 userSubscription.setEntranceDone(userSubscription.getEntranceDone() + 1);
-                userSubscriptionDAO.updateAll(userSubscription);
+                userSubscriptionDAO.updateUserSubscription(userSubscription);
                 return 0;
             }
         }
