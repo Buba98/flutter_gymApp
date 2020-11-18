@@ -1,8 +1,8 @@
 package com.buba.gymApp.backend.service;
 
-import com.buba.gymApp.backend.dao.subscriptionDAO.SubscriptionDAO;
-import com.buba.gymApp.backend.dao.userDAO.UserDAO;
-import com.buba.gymApp.backend.dao.userSubscriptionDAO.UserSubscriptionDAO;
+import com.buba.gymApp.backend.dao.interfaces.SubscriptionDAO;
+import com.buba.gymApp.backend.dao.interfaces.UserDAO;
+import com.buba.gymApp.backend.dao.interfaces.UserSubscriptionDAO;
 import com.buba.gymApp.backend.model.administrationComponents.Subscription;
 import com.buba.gymApp.backend.model.administrationComponents.User;
 import com.buba.gymApp.backend.model.administrationComponents.UserSubscription;

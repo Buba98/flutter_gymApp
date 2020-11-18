@@ -1,7 +1,7 @@
 package com.buba.gymApp.backend.service;
 
-import com.buba.gymApp.backend.dao.sessionDAO.SessionDAO;
-import com.buba.gymApp.backend.dao.userDAO.UserDAO;
+import com.buba.gymApp.backend.dao.interfaces.SessionDAO;
+import com.buba.gymApp.backend.dao.interfaces.UserDAO;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;

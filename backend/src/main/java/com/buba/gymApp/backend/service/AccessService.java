@@ -1,7 +1,7 @@
 package com.buba.gymApp.backend.service;
 
-import com.buba.gymApp.backend.dao.userDAO.UserDAO;
-import com.buba.gymApp.backend.dao.sessionDAO.SessionDAO;
+import com.buba.gymApp.backend.dao.interfaces.UserDAO;
+import com.buba.gymApp.backend.dao.interfaces.SessionDAO;
 import com.buba.gymApp.backend.model.administrationComponents.Session;
 import com.buba.gymApp.backend.model.administrationComponents.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class AccessService {
     }
 
     public int signUp(String fiscalCode, String name, String surname, Date birthday, String email, String password, String phoneNumber, boolean owner){
-        User user = new User(null, name, surname, fiscalCode, birthday, null, email, password, phoneNumber, null, null, owner);
+        User user = new User(null, name, surname, fiscalCode, birthday, email, password, phoneNumber, null, owner);
 
         if (userDAO.selectUserByEmail(email) != null)
             return 1;
@@ -77,5 +77,15 @@ public class AccessService {
 
     public boolean deleteSession(UUID uuid){
         return sessionDAO.deleteSessionByUUID(uuid);
+    }
+
+    public Integer getUserIdByUUID(UUID uuid){
+        Session session = sessionDAO.selectSessionByUUID(uuid);
+
+        if (session == null)
+            return null;
+        
+        return session.getUserId();
+
     }
 }

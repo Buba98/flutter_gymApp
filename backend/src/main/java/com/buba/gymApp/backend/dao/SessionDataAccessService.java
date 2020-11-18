@@ -1,5 +1,6 @@
-package com.buba.gymApp.backend.dao.sessionDAO;
+package com.buba.gymApp.backend.dao;
 
+import com.buba.gymApp.backend.dao.interfaces.SessionDAO;
 import com.buba.gymApp.backend.model.administrationComponents.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -35,12 +36,12 @@ public class SessionDataAccessService implements SessionDAO {
                 id = null;
         }
 
-        String sql = "INSERT INTO session (uuid, userid, dateexpiring) values (?, ?, ?)";
+        String sql = "INSERT INTO session (uuid, \"userId\") values (?, ?)";
 
-        Session session = new Session(id, userId, new Date(new Date().getTime() + TimeUnit.DAYS.toMillis(31)));
+        Session session = new Session(id, userId);
 
         try {
-            jdbcTemplate.update(sql, session.getId(), session.getUserId(), session.getDateExpiring());
+            jdbcTemplate.update(sql, session.getId(), session.getUserId());
         } catch (DataAccessException e) {
             e.printStackTrace();
             return null;
@@ -51,7 +52,7 @@ public class SessionDataAccessService implements SessionDAO {
 
     @Override
     public Session selectSessionByUserId(int userId) {
-        String sql = "SELECT * FROM session WHERE userid = ?";
+        String sql = "SELECT * FROM session WHERE \"userId\" = ?";
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{userId}, ((resultSet, i) -> fromResultSetToSession(resultSet)));
         } catch (DataAccessException e) {
@@ -62,7 +63,7 @@ public class SessionDataAccessService implements SessionDAO {
 
     @Override
     public boolean deleteSessionByUserId(int userId) {
-        String sql = "DELETE FROM session WHERE userid = ?";
+        String sql = "DELETE FROM session WHERE \"userId\" = ?";
         try {
             return jdbcTemplate.update(sql, userId) == 1;
         }
@@ -98,8 +99,7 @@ public class SessionDataAccessService implements SessionDAO {
     private Session fromResultSetToSession(ResultSet resultSet) throws SQLException {
         UUID id = resultSet.getObject("uuid", java.util.UUID.class);
         int userId = resultSet.getInt("userid");
-        Date dateExpiring = resultSet.getTimestamp("dateexpiring");
 
-        return new Session(id, userId, dateExpiring);
+        return new Session(id, userId);
     }
 }

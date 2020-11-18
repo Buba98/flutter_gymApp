@@ -38,9 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return <Widget>[
       _customTile(context: context, icon: Icons.card_membership, text: "Tessara d'ingresso", destination: Entrance()),
-      isOwner ?
-      _customTile(context: context, icon: Icons.app_registration, text: "Registra nuovo utente", destination: SignUp())
-          :
+      _customTile(context: context, icon: Icons.app_registration, text: "Registra nuovo utente", destination: SignUp()),
+
           _customTile(context: context, icon: Icons.app_registration, text: "Registra", destination: SignUp()),
       _customTile(context: context, icon: Icons.info_outline, text: "Info", destination: Info())
     ];

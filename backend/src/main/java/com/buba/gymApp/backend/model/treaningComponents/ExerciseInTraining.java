@@ -1,19 +1,24 @@
 package com.buba.gymApp.backend.model.treaningComponents;
 
+import com.buba.gymApp.backend.utils.PostgreSQLInt4Array;
+import org.springframework.jdbc.core.RowMapper;
+
 import java.util.List;
 
 public class ExerciseInTraining {
     private int id;
     private int idExercise;
-    private List<Integer> sets;
+    private int[] sets;
     private String description;
 
-    public ExerciseInTraining(int id, int idExercise, List<Integer> sets, String description) {
+    public ExerciseInTraining(int id, int idExercise, int[] sets, String description) {
         this.id = id;
         this.idExercise = idExercise;
         this.sets = sets;
         this.description = description;
     }
+
+    private ExerciseInTraining(){}
 
     public int getId() {
         return id;
@@ -31,11 +36,11 @@ public class ExerciseInTraining {
         this.idExercise = idExercise;
     }
 
-    public List<Integer> getSets() {
+    public int[] getSets() {
         return sets;
     }
 
-    public void setSets(List<Integer> sets) {
+    public void setSets(int[] sets) {
         this.sets = sets;
     }
 
@@ -45,5 +50,17 @@ public class ExerciseInTraining {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public static RowMapper<ExerciseInTraining> mapper(){
+        return (resultSet, i) -> {
+            ExerciseInTraining exerciseInTraining = new ExerciseInTraining();
+            exerciseInTraining.id = resultSet.getInt("id");
+            exerciseInTraining.idExercise = resultSet.getInt("exerciseId");
+            exerciseInTraining.sets = (int[]) resultSet.getArray("setsIds").getArray();
+            exerciseInTraining.description = resultSet.getString("description");
+
+            return  exerciseInTraining;
+        };
     }
 }

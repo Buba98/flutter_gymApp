@@ -198,7 +198,7 @@ public class AdministrationController {
     }
 
     private String entranceRegistration(JsonObject json){
-        int id;
+        Integer id;
 
         try {
             id = accessService.getUserIdByUUID(UUID.fromString(json.get("uuidAuthentication").getAsString()));

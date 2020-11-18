@@ -1,18 +1,14 @@
 package com.buba.gymApp.backend.model.administrationComponents;
 
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 public class Session {
     UUID id;
     int userId;
-    Date dateExpiring;
 
-    public Session(UUID id, int userId, Date dateExpiring) {
+    public Session(UUID id, int userId) {
         this.id = id;
         this.userId = userId;
-        this.dateExpiring = dateExpiring;
     }
 
     public UUID getId() {
@@ -29,13 +25,5 @@ public class Session {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public Date getDateExpiring() {
-        return dateExpiring;
-    }
-
-    public void setDateExpiring(Date dateExpiring) {
-        this.dateExpiring = dateExpiring;
     }
 }

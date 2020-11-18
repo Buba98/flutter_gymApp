@@ -1,19 +1,21 @@
 package com.buba.gymApp.backend.model.treaningComponents;
 
-import java.util.List;
+import org.springframework.jdbc.core.RowMapper;
 
 public class Training {
     private int id;
     private String name;
     private String description;
-    private List<List<Integer>> exercisesInTraining;
+    private int[][] exercisesInTraining;
 
-    public Training(int id, String name, String description, List<List<Integer>> exercisesInTraining) {
+    public Training(int id, String name, String description, int[][] exercisesInTraining) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.exercisesInTraining = exercisesInTraining;
     }
+
+    private Training(){}
 
     public int getId() {
         return id;
@@ -39,11 +41,23 @@ public class Training {
         this.description = description;
     }
 
-    public List<List<Integer>> getExercisesInTraining() {
+    public int[][] getExercisesInTraining() {
         return exercisesInTraining;
     }
 
-    public void setExercisesInTraining(List<List<Integer>> exercisesInTraining) {
+    public void setExercisesInTraining(int[][] exercisesInTraining) {
         this.exercisesInTraining = exercisesInTraining;
+    }
+
+    public static RowMapper<Training> mapper(){
+        return (resultSet, i) -> {
+            Training training = new Training();
+            training.id =(resultSet.getInt("id"));
+            training.name = resultSet.getString("name");
+            training.description = resultSet.getString("description");
+            training.exercisesInTraining = (int[][]) resultSet.getArray("exercisesInTrainingIds").getArray();
+
+            return  training;
+        };
     }
 }

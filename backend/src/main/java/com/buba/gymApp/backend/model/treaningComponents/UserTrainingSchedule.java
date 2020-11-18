@@ -1,20 +1,35 @@
 package com.buba.gymApp.backend.model.treaningComponents;
 
+import com.buba.gymApp.backend.utils.Converters;
+import org.springframework.jdbc.core.RowMapper;
+
 import java.util.Date;
 
 public class UserTrainingSchedule {
     private int id;
+    private int userId;
+    private int trainingScheduleId;
     private Date startDate;
     private Date endDate;
-    private int trainingScheduleId;
     private String comments;
 
-    public UserTrainingSchedule(int id, Date startDate, Date endDate, int trainingScheduleId, String comments) {
+    public UserTrainingSchedule(int id, Date startDate, Date endDate, int trainingScheduleId, String comments, int userId) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
         this.trainingScheduleId = trainingScheduleId;
         this.comments = comments;
+        this.userId = userId;
+    }
+
+    private UserTrainingSchedule(){}
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getId() {
@@ -55,5 +70,20 @@ public class UserTrainingSchedule {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+
+    public static RowMapper<UserTrainingSchedule> mapper(){
+        return (resultSet, i) -> {
+            UserTrainingSchedule userTrainingSchedule = new UserTrainingSchedule();
+            userTrainingSchedule.id = resultSet.getInt("id");
+            userTrainingSchedule.startDate = resultSet.getTimestamp("startDate");
+            userTrainingSchedule.endDate = resultSet.getTimestamp("endDate");
+            userTrainingSchedule.comments = resultSet.getString("comments");
+            userTrainingSchedule.trainingScheduleId = resultSet.getInt("trainingScheduleId");
+            userTrainingSchedule.userId = resultSet.getInt("userId");
+
+            return  userTrainingSchedule;
+        };
     }
 }

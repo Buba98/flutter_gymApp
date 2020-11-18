@@ -1,17 +1,19 @@
 package com.buba.gymApp.backend.model.treaningComponents;
 
+import org.postgresql.util.PGInterval;
+import org.springframework.jdbc.core.RowMapper;
+
 import java.time.Duration;
-import java.util.List;
 
 public class Set {
     private int id;
-    private List<Integer> reps;
+    private int[] reps;
     private Duration rest;
     private Duration eccentricDuration;
     private Duration concentricDuration;
     private Duration setDuration;
 
-    public Set(int id, List<Integer> reps, Duration rest, Duration eccentricDuration, Duration concentricDuration, Duration setDuration) {
+    public Set(int id, int[] reps, Duration rest, Duration eccentricDuration, Duration concentricDuration, Duration setDuration) {
         this.id = id;
         this.reps = reps;
         this.rest = rest;
@@ -19,6 +21,8 @@ public class Set {
         this.concentricDuration = concentricDuration;
         this.setDuration = setDuration;
     }
+
+    private Set(){}
 
     public int getId() {
         return id;
@@ -28,11 +32,11 @@ public class Set {
         this.id = id;
     }
 
-    public List<Integer> getReps() {
+    public int[] getReps() {
         return reps;
     }
 
-    public void setReps(List<Integer> reps) {
+    public void setReps(int[] reps) {
         this.reps = reps;
     }
 
@@ -67,4 +71,20 @@ public class Set {
     public void setSetDuration(Duration setDuration) {
         this.setDuration = setDuration;
     }
+
+    public static RowMapper<Set> mapper(){
+        return (resultSet, i) -> {
+            Set set = new Set();
+            set.id = resultSet.getInt("id");
+            set.rest = Duration.ofSeconds((long) resultSet.getObject("rest", PGInterval.class).getSeconds());
+            set.eccentricDuration = Duration.ofSeconds((long) resultSet.getObject("eccentricDuration", PGInterval.class).getSeconds());
+            set.concentricDuration = Duration.ofSeconds((long) resultSet.getObject("concentricDuration", PGInterval.class).getSeconds());
+            set.setDuration = Duration.ofSeconds((long) resultSet.getObject("setDuration", PGInterval.class).getSeconds());
+            set.reps = (int[]) resultSet.getArray("reps").getArray();
+
+
+            return  set;
+        };
+    }
+
 }

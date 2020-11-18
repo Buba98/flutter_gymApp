@@ -1,6 +1,7 @@
-package com.buba.gymApp.backend.dao.userSubscriptionDAO;
+package com.buba.gymApp.backend.dao;
 
-import com.buba.gymApp.backend.dao.subscriptionDAO.SubscriptionDAO;
+import com.buba.gymApp.backend.dao.interfaces.SubscriptionDAO;
+import com.buba.gymApp.backend.dao.interfaces.UserSubscriptionDAO;
 import com.buba.gymApp.backend.model.administrationComponents.UserSubscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,15 +30,14 @@ public class UserSubscriptionDataAccessService implements UserSubscriptionDAO {
 
     @Override
     public UserSubscription insertUserSubscription(UserSubscription userSubscription) {
-        String sql = "INSERT INTO \"userSubscription\" (userid, subscriptionid, entrancedone, startdate, enddate) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO \"userSubscription\" (id, \"userId\", \"subscriptionId\", \"entranceDone\", \"startDate\", \"endDate\") VALUES (?, ?, ?, ?, ?)";
 
         Object[] objects = new Object[]{userSubscription.getUserId(), userSubscription.getSubscriptionId(), userSubscription.getEntranceDone(), userSubscription.getStartDate(), userSubscription.getEndDate()};
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
      try {
         jdbcTemplate.update(sql,objects, keyHolder);
-    } catch (
-    DataAccessException e) {
+    } catch (DataAccessException e) {
         e.printStackTrace();
         return null;
     }
@@ -47,7 +47,7 @@ public class UserSubscriptionDataAccessService implements UserSubscriptionDAO {
 
     @Override
     public boolean updateAll(UserSubscription userSubscription){
-        String sql = "UPDATE \"userSubscription\" SET entrancedone = ?, startdate = ?, enddate = ? WHERE id = ?";
+        String sql = "UPDATE \"userSubscription\" SET \"entranceDone\" = ?, \"startDate\" = ?, \"endDate\" = ? WHERE id = ?";
 
         Object[] objects = new Object[]{userSubscription.getEntranceDone(), userSubscription.getStartDate(), userSubscription.getEndDate(), userSubscription.getId()};
 
@@ -57,7 +57,7 @@ public class UserSubscriptionDataAccessService implements UserSubscriptionDAO {
 
     @Override
     public List<UserSubscription> getAllUserSubscriptionsByUserId(int userId){
-        String sql = "SELECT * FROM \"userSubscription\" WHERE userid = ?";
+        String sql = "SELECT * FROM \"userSubscription\" WHERE \"userId\" = ?";
 
         try {
         return jdbcTemplate.query(sql, new Object[]{userId}, (((resultSet, i) -> fromResultSetToUserSubscription(resultSet))));
@@ -69,7 +69,7 @@ public class UserSubscriptionDataAccessService implements UserSubscriptionDAO {
 
     @Override
     public List<Integer> getAllUserSubscriptionsIdsByUserId(int userId) {
-        String sql = "SELECT id FROM \"userSubscription\" WHERE userid = ?";
+        String sql = "SELECT id FROM \"userSubscription\" WHERE \"userId\" = ?";
 
         try {
             return jdbcTemplate.query(sql, new Object[]{userId}, (((resultSet, i) -> resultSet.getInt("id"))));
@@ -81,7 +81,7 @@ public class UserSubscriptionDataAccessService implements UserSubscriptionDAO {
 
     @Override
     public List<UserSubscription> getAllNotExpiredUserSubscriptionsByUserId(int userId){
-        String sql = "SELECT * FROM \"userSubscription\" WHERE userid = ? AND enddate > now()";
+        String sql = "SELECT * FROM \"userSubscription\" WHERE \"userId\" = ? AND \"endDate\" > now()";
         try {
         List<UserSubscription> userSubscriptions = jdbcTemplate.query(sql, new Object[]{userId}, (((resultSet, i) -> fromResultSetToUserSubscription(resultSet))));
             userSubscriptions.removeIf(userSubscription -> subscriptionDAO.selectSubscriptionById(userSubscription.getSubscriptionId()).getMaxEntrances() > 0 && userSubscription.getEntranceDone() >= subscriptionDAO.selectSubscriptionById(userSubscription.getSubscriptionId()).getMaxEntrances());
@@ -95,10 +95,10 @@ public class UserSubscriptionDataAccessService implements UserSubscriptionDAO {
     private UserSubscription fromResultSetToUserSubscription(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
         int userId = resultSet.getInt("userid");
-        int subscriptionId = resultSet.getInt("subscriptionid");
-        int entranceDone = resultSet.getInt("entrancedone");
-        Date dateStart = resultSet.getDate("startdate");
-        Date dateEnd = resultSet.getDate("enddate");
+        int subscriptionId = resultSet.getInt("subscriptionId");
+        int entranceDone = resultSet.getInt("entranceDone");
+        Date dateStart = resultSet.getDate("startDate");
+        Date dateEnd = resultSet.getDate("endDate");
 
         return new UserSubscription(id, subscriptionId, entranceDone, userId, dateStart, dateEnd);
     }

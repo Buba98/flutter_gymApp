@@ -39,7 +39,9 @@ class _RootPageState extends State<RootPage> {
       case true:
         return HomeScreen();
       case false:
-        return SignIn();
+        // return SignIn();
+        return HomeScreen();
+
       default:
         return SignIn();
     }

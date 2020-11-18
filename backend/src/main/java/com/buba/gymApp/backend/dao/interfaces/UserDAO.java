@@ -1,4 +1,4 @@
-package com.buba.gymApp.backend.dao.userDAO;
+package com.buba.gymApp.backend.dao.interfaces;
 
 import com.buba.gymApp.backend.model.administrationComponents.User;
 

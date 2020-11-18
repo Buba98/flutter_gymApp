@@ -1,19 +1,15 @@
-package com.buba.gymApp.backend.dao.userDAO;
+package com.buba.gymApp.backend.dao;
 
-import com.buba.gymApp.backend.dao.userSubscriptionDAO.UserSubscriptionDAO;
+import com.buba.gymApp.backend.dao.interfaces.UserDAO;
+import com.buba.gymApp.backend.dao.interfaces.UserSubscriptionDAO;
 import com.buba.gymApp.backend.model.administrationComponents.User;
 import com.buba.gymApp.backend.utils.Converters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -33,7 +29,7 @@ public class UserDataAccessService implements UserDAO {
     @Override
     public User insertUser(User user) {
 
-        String sql = "INSERT INTO \"user\" (name, surname, email, fiscalcode, birthday, password, insurances, phonenumber, owner) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO \"user\" (name, surname, email, \"fiscalCode\", birthday, password, insurances, phone, owner) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         Object[] objects = new Object[]{ user.getName(), user.getSurname(), user.getEmail(), user.getFiscalCode(), user.getBirthday(), user.getPassword(), Converters.createSqlArray(new ArrayList<Date>(), jdbcTemplate, "date"), user.getPhoneNumber(), user.isOwner()};
         try {
@@ -70,7 +66,7 @@ public class UserDataAccessService implements UserDAO {
 
     @Override
     public boolean updateUserById(User user) {
-        String sql = "UPDATE user SET name = ?, surname = ?, email = ?, fiscalcode = ?, birthday = ?, password = ?,  phonenumber = ?, insurances = ?, owner = ? WHERE id = ?";
+        String sql = "UPDATE \"user\" SET name = ?, surname = ?, email = ?, \"fiscalCode\" = ?, birthday = ?, password = ?,  phone = ?, insurances = ?, owner = ? WHERE id = ?";
         Object[] objects;
         try {
             objects = new Object[]{user.getName(), user.getSurname(), user.getEmail(), user.getFiscalCode(), user.getBirthday(), user.getPassword(), user.getPhoneNumber(), Converters.createSqlArray(user.getInsurances(), jdbcTemplate, "date"), user.isOwner(), user.getId()};
@@ -106,7 +102,7 @@ public class UserDataAccessService implements UserDAO {
 
     @Override
     public User selectUserByFiscalCode(String fiscalCode) {
-        String sql = "SELECT * FROM \"user\" WHERE fiscalcode = ?";
+        String sql = "SELECT * FROM \"user\" WHERE \"fiscalCode\" = ?";
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{fiscalCode}, ((resultSet, i) -> fromResultSetToUser(resultSet)));
         } catch (DataAccessException e) {
@@ -117,7 +113,7 @@ public class UserDataAccessService implements UserDAO {
 
     @Override
     public List<String[]> selectForAutocomplete(String name, String surname){
-        String sql = "SELECT name, surname, birthday, fiscalcode FROM \"user\" WHERE name LIKE ? AND surname LIKE ?";
+        String sql = "SELECT name, surname, birthday, \"fiscalCode\" FROM \"user\" WHERE name LIKE ? AND surname LIKE ?";
 
         return jdbcTemplate.query(sql, new Object[]{"%" + name + "%" , "%" + surname + "%"}, (resultSet, i) -> new String[]{resultSet.getString("name"), resultSet.getString("surname"), resultSet.getDate("birthday").toString(), resultSet.getString("fiscalcode")});
 
@@ -128,16 +124,14 @@ public class UserDataAccessService implements UserDAO {
         String fiscalCode = resultSet.getString("fiscalCode");
         String name = resultSet.getString("name");
         String surname = resultSet.getString("surname");
-        List<Integer> userTrainingSchedule = new ArrayList<>();//todo
         Date birthday = resultSet.getDate("birthday");
         String email = resultSet.getString("email");
         String password = resultSet.getString("password");
         String phoneNumber = resultSet.getString("phoneNumber");
-        List<Integer> userSubscriptions = userSubscriptionDAO.getAllUserSubscriptionsIdsByUserId(resultSet.getInt("id"));
         List<Date> insurances = Arrays.asList((Date[]) resultSet.getArray("insurances").getArray());
         boolean owner = resultSet.getBoolean("owner");
 
-        return new User(id, name, surname, fiscalCode, birthday, userTrainingSchedule, email, password, phoneNumber, userSubscriptions, insurances, owner);
+        return new User(id, name, surname, fiscalCode, birthday, email, password, phoneNumber, insurances, owner);
     }
 
 

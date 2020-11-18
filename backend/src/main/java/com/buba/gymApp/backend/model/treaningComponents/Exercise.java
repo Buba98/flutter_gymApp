@@ -1,13 +1,23 @@
 package com.buba.gymApp.backend.model.treaningComponents;
 
+import org.springframework.jdbc.core.RowMapper;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Exercise {
     private int id;
+    private String name;
     private String urlVideo;
     private String imageOrGif;
     private ExerciseType exerciseType;
 
-    public Exercise(int id, String urlVideo, String imageOrGif, ExerciseType exerciseType) {
+    private Exercise() {
+
+    }
+
+    public Exercise(int id, String urlVideo, String imageOrGif, ExerciseType exerciseType, String name) {
         this.id = id;
+        this.name = name;
         this.urlVideo = urlVideo;
         this.imageOrGif = imageOrGif;
         this.exerciseType = exerciseType;
@@ -19,6 +29,14 @@ public class Exercise {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUrlVideo() {
@@ -43,5 +61,18 @@ public class Exercise {
 
     public void setExerciseType(ExerciseType exerciseType) {
         this.exerciseType = exerciseType;
+    }
+
+    public static RowMapper<Exercise> mapper(){
+        return (resultSet, i) -> {
+            Exercise exercise = new Exercise();
+            exercise.id = resultSet.getInt("id");
+            exercise.name = resultSet.getString("name");
+            exercise.urlVideo = resultSet.getString("urlVideo");
+            exercise.imageOrGif = resultSet.getString("imageOrGif");
+            exercise.exerciseType = ExerciseType.getEnumByInt(resultSet.getInt("typeOfExercise"));
+
+            return  exercise;
+        };
     }
 }
