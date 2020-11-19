@@ -1,5 +1,8 @@
 package com.buba.gymApp.backend.model.administrationComponents;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.util.Date;
@@ -138,5 +141,27 @@ public class User {
 
             return user;
         };
+    }
+
+    public JsonObject json(){
+        JsonObject toReturn = new JsonObject();
+
+        toReturn.addProperty("name", name);
+        toReturn.addProperty("surname", surname);
+        toReturn.addProperty("email", email);
+        toReturn.addProperty("fiscalCode", fiscalCode);
+        toReturn.addProperty("birthday", birthday.toString());
+        toReturn.addProperty("phone", phoneNumber);
+        toReturn.addProperty("owner", owner);
+
+        JsonArray insurances = new JsonArray(this.insurances.length);
+
+        for (Date date : this.insurances){
+            insurances.add(date.toString());
+        }
+
+        toReturn.add("insurances", insurances);
+
+        return toReturn;
     }
 }

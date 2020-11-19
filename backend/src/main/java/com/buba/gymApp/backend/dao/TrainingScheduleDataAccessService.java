@@ -8,10 +8,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.Objects;
 
+@Repository("postgresTrainingSchedule")
 public class TrainingScheduleDataAccessService implements TrainingScheduleDAO {
     JdbcTemplate jdbcTemplate;
 
@@ -96,7 +98,7 @@ public class TrainingScheduleDataAccessService implements TrainingScheduleDAO {
             jdbcTemplate.update(sql, preparedStatement -> {
                 preparedStatement.setString(1, trainingSchedule.getName());
                 preparedStatement.setString(2, trainingSchedule.getDescription());
-                preparedStatement.setArray(3, new PostgreSQLInt4Array(trainingSchedule.getTrainings()));
+                preparedStatement.setArray(3, new PostgreSQLInt4Array(trainingSchedule.getTrainingIds()));
             });
         } catch (DataAccessException e){
             e.printStackTrace();

@@ -1,5 +1,7 @@
 package com.buba.gymApp.backend.model.administrationComponents;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.springframework.jdbc.core.RowMapper;
 
 public class Subscription {
@@ -71,5 +73,17 @@ public class Subscription {
 
             return subscription;
         };
+    }
+
+    public JsonObject json(){
+        JsonObject toReturn = new JsonObject();
+
+        toReturn.addProperty("cost", cost);
+        toReturn.addProperty("maxEntrances", maxEntrances);
+        toReturn.addProperty("mouthDuration", maxEntrances);
+        toReturn.addProperty("name", name);
+        toReturn.addProperty("id", id);
+
+        return toReturn;
     }
 }

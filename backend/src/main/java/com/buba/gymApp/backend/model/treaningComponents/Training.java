@@ -1,5 +1,7 @@
 package com.buba.gymApp.backend.model.treaningComponents;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.springframework.jdbc.core.RowMapper;
 
 public class Training {
@@ -59,5 +61,28 @@ public class Training {
 
             return  training;
         };
+    }
+
+    public JsonObject json(){
+        JsonObject toReturn = new JsonObject();
+
+        toReturn.addProperty("id", id);
+        toReturn.addProperty("name", name);
+        toReturn.addProperty("description", description);
+
+        JsonArray jsonArray = new JsonArray();
+        JsonArray jsonSubArray;
+
+        for (int[] exercisesInTrainingId : exercisesInTraining){
+            jsonSubArray = new JsonArray();
+            for (int exerciseInTrainingId : exercisesInTrainingId){
+                jsonArray.add(exerciseInTrainingId);
+            }
+            jsonArray.add(jsonSubArray);
+        }
+
+        toReturn.add("exercisesInTrainingIds", jsonArray);
+
+        return toReturn;
     }
 }

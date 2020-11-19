@@ -1,20 +1,19 @@
 package com.buba.gymApp.backend.model.treaningComponents;
 
-import com.buba.gymApp.backend.utils.PostgreSQLInt4Array;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.springframework.jdbc.core.RowMapper;
-
-import java.util.List;
 
 public class ExerciseInTraining {
     private int id;
-    private int idExercise;
-    private int[] sets;
+    private int exerciseId;
+    private int[] setsIds;
     private String description;
 
-    public ExerciseInTraining(int id, int idExercise, int[] sets, String description) {
+    public ExerciseInTraining(int id, int exerciseId, int[] setsIds, String description) {
         this.id = id;
-        this.idExercise = idExercise;
-        this.sets = sets;
+        this.exerciseId = exerciseId;
+        this.setsIds = setsIds;
         this.description = description;
     }
 
@@ -28,20 +27,20 @@ public class ExerciseInTraining {
         this.id = id;
     }
 
-    public int getIdExercise() {
-        return idExercise;
+    public int getExerciseId() {
+        return exerciseId;
     }
 
-    public void setIdExercise(int idExercise) {
-        this.idExercise = idExercise;
+    public void setExerciseId(int exerciseId) {
+        this.exerciseId = exerciseId;
     }
 
-    public int[] getSets() {
-        return sets;
+    public int[] getSetsIds() {
+        return setsIds;
     }
 
-    public void setSets(int[] sets) {
-        this.sets = sets;
+    public void setSetsIds(int[] setsIds) {
+        this.setsIds = setsIds;
     }
 
     public String getDescription() {
@@ -56,11 +55,28 @@ public class ExerciseInTraining {
         return (resultSet, i) -> {
             ExerciseInTraining exerciseInTraining = new ExerciseInTraining();
             exerciseInTraining.id = resultSet.getInt("id");
-            exerciseInTraining.idExercise = resultSet.getInt("exerciseId");
-            exerciseInTraining.sets = (int[]) resultSet.getArray("setsIds").getArray();
+            exerciseInTraining.exerciseId = resultSet.getInt("exerciseId");
+            exerciseInTraining.setsIds = (int[]) resultSet.getArray("setsIds").getArray();
             exerciseInTraining.description = resultSet.getString("description");
 
             return  exerciseInTraining;
         };
+    }
+
+    public JsonObject json(){
+        JsonObject toReturn = new JsonObject();
+
+        toReturn.addProperty("id", id);
+        toReturn.addProperty("exerciseId", exerciseId);
+
+        JsonArray jsonArray = new JsonArray();
+
+        for(int setId : setsIds){
+            jsonArray.add(setId);
+        }
+
+        toReturn.add("setIds", jsonArray);
+
+        return toReturn;
     }
 }

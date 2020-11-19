@@ -1,5 +1,7 @@
 package com.buba.gymApp.backend.model.treaningComponents;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.postgresql.util.PGInterval;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -85,6 +87,25 @@ public class Set {
 
             return  set;
         };
+    }
+
+    public JsonObject json(){
+        JsonObject toReturn = new JsonObject();
+
+        toReturn.addProperty("id", id);
+        toReturn.addProperty("rest", rest.toSeconds());
+        toReturn.addProperty("eccentricDuration", eccentricDuration.toSeconds());
+        toReturn.addProperty("concentricDuration", concentricDuration.toSeconds());
+        toReturn.addProperty("setDuration", setDuration.toSeconds());
+
+        JsonArray jsonArray = new JsonArray();
+
+        for (int rep : reps){
+            jsonArray.add(rep);
+        }
+        toReturn.add("reps", jsonArray);
+
+        return toReturn;
     }
 
 }

@@ -27,21 +27,13 @@ class _RootPageState extends State<RootPage> {
     });
   }
 
-  onSignIn() {
-    setState(() {
-      userIsLoggedIn = true;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     switch (userIsLoggedIn) {
       case true:
         return HomeScreen();
       case false:
-        // return SignIn();
-        return HomeScreen();
-
+        return SignIn();
       default:
         return SignIn();
     }

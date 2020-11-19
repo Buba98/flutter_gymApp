@@ -1,5 +1,6 @@
 package com.buba.gymApp.backend.model.administrationComponents;
 
+import com.google.gson.JsonObject;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.util.Date;
@@ -72,5 +73,15 @@ public class UserSubscription {
 
             return userSubscription;
         };
+    }
+
+    public JsonObject json(){
+        JsonObject toReturn = new JsonObject();
+
+        toReturn.addProperty("endDate", endDate.toString());
+        toReturn.addProperty("entranceDone", entranceDone);
+        toReturn.addProperty("subscriptionId", subscriptionId);
+
+        return toReturn;
     }
 }

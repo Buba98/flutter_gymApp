@@ -196,7 +196,8 @@ class _SignInState extends State<SignIn> {
   }
   
   _signIn() async {
-    String uid = await authService.signInWithEmailAndPassword(emailController.text, passwordController.text);
+
+    Map<String, dynamic> uid = await authService.signInWithEmailAndPassword(emailController.text, passwordController.text);
 
     if(uid == null) {
       HelperFunctions.saveUserLoggedIn(false);

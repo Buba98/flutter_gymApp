@@ -27,6 +27,16 @@ public class StandardController {
         this.emailService = emailService;
     }
 
+    /**
+     * Sign in for users
+     * @param jsonString the json as string
+     *                   FORMAT:
+     *                   {
+     *                      "email" : "grecovincenzo98@gmail.com",
+     *                      "password" : "nontelado"
+     *                   }
+     * @return the uuid for login in a json
+     */
     @PostMapping("/signIn")
     public String signIn(@RequestBody String jsonString) {
 
@@ -120,5 +130,38 @@ public class StandardController {
             return new Gson().toJson(new StatusResponse(200, "Success"));
         else
             return new Gson().toJson(new StatusResponse(600, "Internal server error"));
+    }
+
+    @PostMapping("userInfo")
+    public String userInfo(@RequestBody String jsonString){
+        //check for correct json
+        JsonObject json;
+        try {
+            json = JsonParser.parseString(jsonString).getAsJsonObject();
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+            return new Gson().toJson(new StatusResponse(400, "Bad request"));
+        }
+
+        UUID uuid;
+
+        try {
+            uuid = UUID.fromString(json.get("uuidAuthentication").getAsString());
+        } catch (IllegalArgumentException | NullPointerException e ) {
+            e.printStackTrace();
+            return new Gson().toJson(new StatusResponse(400, "Bad request"));
+        }
+
+        int userId = accessService.getUserIdByUUID(uuid);
+
+        if (userId == -1){
+            return new Gson().toJson(new StatusResponse(400, "Session expired"));
+        }
+
+        JsonObject toReturn = new JsonObject();
+        toReturn.addProperty("status", 200);
+        toReturn.add("token", accessService.retrieveUserInfo(userId));
+
+        return toReturn.toString();
     }
 }

@@ -1,5 +1,6 @@
 package com.buba.gymApp.backend.model.treaningComponents;
 
+import com.google.gson.JsonObject;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -74,5 +75,17 @@ public class Exercise {
 
             return  exercise;
         };
+    }
+
+    public JsonObject json(){
+        JsonObject toReturn = new JsonObject();
+
+        toReturn.addProperty("name", name);
+        toReturn.addProperty("id", id);
+        toReturn.addProperty("urlVideo", urlVideo);
+        toReturn.addProperty("imageOrGif", imageOrGif);
+        toReturn.addProperty("typeOfExercise", exerciseType.toString());
+
+        return toReturn;
     }
 }

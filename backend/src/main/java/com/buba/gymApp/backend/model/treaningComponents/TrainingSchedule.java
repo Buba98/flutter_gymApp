@@ -1,17 +1,19 @@
 package com.buba.gymApp.backend.model.treaningComponents;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.springframework.jdbc.core.RowMapper;
 
 public class TrainingSchedule {
     private int id;
     private String name;
-    private int[] trainings;
+    private int[] trainingIds;
     private String description;
 
-    public TrainingSchedule(int id, String name, int[] trainings, String description) {
+    public TrainingSchedule(int id, String name, int[] trainingIds, String description) {
         this.id = id;
         this.name = name;
-        this.trainings = trainings;
+        this.trainingIds = trainingIds;
         this.description = description;
     }
 
@@ -33,12 +35,12 @@ public class TrainingSchedule {
         this.name = name;
     }
 
-    public int[] getTrainings() {
-        return trainings;
+    public int[] getTrainingIds() {
+        return trainingIds;
     }
 
-    public void setTrainings(int[] trainings) {
-        this.trainings = trainings;
+    public void setTrainingIds(int[] trainingIds) {
+        this.trainingIds = trainingIds;
     }
 
     public String getDescription() {
@@ -55,9 +57,27 @@ public class TrainingSchedule {
             trainingSchedule.id =(resultSet.getInt("id"));
             trainingSchedule.name = resultSet.getString("name");
             trainingSchedule.description = resultSet.getString("description");
-            trainingSchedule.trainings = (int[]) resultSet.getArray("trainingsIds").getArray();
+            trainingSchedule.trainingIds = (int[]) resultSet.getArray("trainingsIds").getArray();
 
             return  trainingSchedule;
         };
+    }
+
+    public JsonObject json(){
+        JsonObject toReturn = new JsonObject();
+
+        toReturn.addProperty("id", id);
+        toReturn.addProperty("name", name);
+        toReturn.addProperty("description", description);
+
+        JsonArray jsonArray = new JsonArray();
+
+        for (int trainingId : trainingIds){
+            jsonArray.add(trainingId);
+        }
+
+        toReturn.add("trainingIds", jsonArray);
+
+        return toReturn;
     }
 }

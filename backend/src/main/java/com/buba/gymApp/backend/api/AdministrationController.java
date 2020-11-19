@@ -197,7 +197,7 @@ public class AdministrationController {
         Date birthday;
         String email;
         String password;
-        String phoneNumber;
+        String phone;
         boolean owner;
 
         try {
@@ -207,7 +207,7 @@ public class AdministrationController {
             birthday = Converters.fromStringToUtil(json.get("birthday").getAsString());
             email = json.get("email").getAsString();
             password = json.get("password").getAsString();
-            phoneNumber = json.get("phoneNumber").getAsString();
+            phone = json.get("phone").getAsString();
             owner = json.get("owner").getAsBoolean();
 
         } catch (NullPointerException | ParseException e){
@@ -217,7 +217,7 @@ public class AdministrationController {
 
         StatusResponse response;
 
-        switch (accessService.signUp(fiscalCode, name, surname, birthday, email, password, phoneNumber, owner)) {
+        switch (accessService.signUp(fiscalCode, name, surname, birthday, email, password, phone, owner)) {
             case 0:
                 response = new StatusResponse(409, "Fiscal code already exists");
                 break;

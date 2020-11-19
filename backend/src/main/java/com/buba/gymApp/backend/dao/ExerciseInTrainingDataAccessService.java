@@ -77,8 +77,8 @@ public class ExerciseInTrainingDataAccessService implements ExerciseInTrainingDA
         String sql = "UPDATE \"exerciseInTraining\" SET \"exerciseId\" = ?, \"setsIds\" = ?, description = ? WHERE id = ?";
         try{
             jdbcTemplate.update(sql, preparedStatement -> {
-                preparedStatement.setInt(1, exerciseInTraining.getIdExercise());
-                preparedStatement.setArray(2, new PostgreSQLInt4Array(exerciseInTraining.getSets()));
+                preparedStatement.setInt(1, exerciseInTraining.getExerciseId());
+                preparedStatement.setArray(2, new PostgreSQLInt4Array(exerciseInTraining.getSetsIds()));
                 preparedStatement.setString(3, exerciseInTraining.getDescription());
             });
             return  exerciseInTraining;

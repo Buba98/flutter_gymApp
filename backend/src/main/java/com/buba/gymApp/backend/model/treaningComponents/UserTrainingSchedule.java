@@ -1,6 +1,7 @@
 package com.buba.gymApp.backend.model.treaningComponents;
 
 import com.buba.gymApp.backend.utils.Converters;
+import com.google.gson.JsonObject;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.util.Date;
@@ -79,11 +80,22 @@ public class UserTrainingSchedule {
             userTrainingSchedule.id = resultSet.getInt("id");
             userTrainingSchedule.startDate = resultSet.getTimestamp("startDate");
             userTrainingSchedule.endDate = resultSet.getTimestamp("endDate");
-            userTrainingSchedule.comments = resultSet.getString("comments");
+            userTrainingSchedule.comments = resultSet.getString("comment");
             userTrainingSchedule.trainingScheduleId = resultSet.getInt("trainingScheduleId");
             userTrainingSchedule.userId = resultSet.getInt("userId");
 
             return  userTrainingSchedule;
         };
+    }
+
+    public JsonObject json(){
+        JsonObject toReturn = new JsonObject();
+
+        toReturn.addProperty("startDate", startDate.toString());
+        toReturn.addProperty("endDate", endDate.toString());
+        toReturn.addProperty("comment", comments);
+        toReturn.addProperty("trainingScheduleId", trainingScheduleId);
+
+        return toReturn;
     }
 }
